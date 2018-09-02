@@ -6,7 +6,7 @@
 class Bitmap
 {
 public:
-	Bitmap(int x, int y);
+	Bitmap(int width, int height);
 	~Bitmap();
 	void setPixel(int x, int y, Color color);
 	Color getPixel(int x, int y);

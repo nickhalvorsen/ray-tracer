@@ -154,13 +154,25 @@
   <ItemGroup>
     <ClInclude Include="Color.h" />
     <ClInclude Include="Bitmap.h" />
+    <ClInclude Include="IntersectionPoint.h" />
     <ClInclude Include="pch.h" />
+    <ClInclude Include="Ray.h" />
+    <ClInclude Include="RayTracer.h" />
+    <ClInclude Include="Sphere.h" />
+    <ClInclude Include="Vector3D.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Color.cpp" />
     <ClCompile Include="Bitmap.cpp" />
+    <ClCompile Include="IntersectionPoint.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="pch.cpp" />
+    <ClCompile Include="pch.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="Ray.cpp" />
+    <ClCompile Include="RayTracer.cpp" />
+    <ClCompile Include="Sphere.cpp" />
+    <ClCompile Include="Vector3D.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

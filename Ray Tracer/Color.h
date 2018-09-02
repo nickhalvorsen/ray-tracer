@@ -7,5 +7,6 @@ public:
 	unsigned char r;
 	unsigned char g;
 	unsigned char b;
+	Color add(Color other);
 };
 
