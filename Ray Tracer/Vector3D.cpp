@@ -10,6 +10,8 @@ Vector3D::Vector3D(double x, double y, double z)
 	this->z = z;
 }
 
+Vector3D::Vector3D() : Vector3D(0, 0, 0) { }
+
 double Vector3D::getLength()
 {
 	return sqrt(x*x + y*y + z*z);
@@ -26,17 +28,17 @@ double Vector3D::dot(Vector3D other)
 	return x*other.x + y*other.y + z*other.z;
 }
 
-Vector3D operator+(Vector3D & first, Vector3D second)
+Vector3D Vector3D::operator+(Vector3D second)
 {
-	return Vector3D(first.x + second.x, first.y + second.y, first.z + second.z);
+	return Vector3D(x + second.x, y + second.y, z + second.z);
 }
 
-Vector3D operator-(Vector3D & first, Vector3D second)
+Vector3D Vector3D::operator-(Vector3D second)
 {
-	return Vector3D(first.x - second.x, first.y - second.y, first.z - second.z);
+	return Vector3D(x - second.x, y - second.y, z - second.z);
 }
 
-Vector3D operator*(Vector3D vector, double multiplyFactor)
+Vector3D Vector3D::operator*(double multiplyFactor)
 {
-	return Vector3D(vector.x * multiplyFactor, vector.y * multiplyFactor, vector.z * multiplyFactor);
+	return Vector3D(x * multiplyFactor, y * multiplyFactor, z * multiplyFactor);
 }

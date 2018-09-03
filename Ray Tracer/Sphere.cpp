@@ -3,13 +3,14 @@
 #include <math.h>
 #include <algorithm>
 
-Sphere::Sphere(Vector3D center, double radius)
+Sphere::Sphere(Vector3D center, double radius, Color color)
 {
 	this->center = center;
 	this->radius = radius;
+	this->color = color;
 }
 
-Sphere::Sphere() : Sphere(Vector3D(0, 0, 0), 1) { }
+Sphere::Sphere() : Sphere(Vector3D(0, 0, 0), 1, Color(0, 0, 0)) { }
 
 //http://www.r-5.org/files/books/computers/algo-list/realtime-3d/Christer_Ericson-Real-Time_Collision_Detection-EN.pdf page 178
 bool Sphere::getClosestIntersection(Ray ray, IntersectionPoint& intersectionPoint)

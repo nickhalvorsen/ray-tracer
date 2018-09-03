@@ -11,7 +11,7 @@ class Sphere
 {
 public:
 	Sphere();
-	Sphere(Vector3D center, double radius);
+	Sphere(Vector3D center, double radius, Color color);
 	Vector3D center;
 	double radius;
 	Color color;

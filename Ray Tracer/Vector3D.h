@@ -11,8 +11,8 @@ public:
 	double getLength();
 	Vector3D normalized();
 	double dot(Vector3D other);
-	friend Vector3D operator+(Vector3D& first, Vector3D second);
-	friend Vector3D operator-(Vector3D& first, Vector3D second);
-	friend Vector3D operator*(Vector3D vector, double multiplyFactor);
+	Vector3D operator+(Vector3D second);
+	Vector3D operator-(Vector3D second);
+	Vector3D operator*(double multiplyFactor);
 private:
 };
