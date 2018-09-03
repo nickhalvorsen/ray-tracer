@@ -28,17 +28,24 @@ double Vector3D::dot(Vector3D other)
 	return x*other.x + y*other.y + z*other.z;
 }
 
-Vector3D Vector3D::operator+(Vector3D second)
+Vector3D Vector3D::operator+(Vector3D other)
 {
-	return Vector3D(x + second.x, y + second.y, z + second.z);
+	return Vector3D(x + other.x, y + other.y, z + other.z);
 }
 
-Vector3D Vector3D::operator-(Vector3D second)
+Vector3D Vector3D::operator-(Vector3D other)
 {
-	return Vector3D(x - second.x, y - second.y, z - second.z);
+	return Vector3D(x - other.x, y - other.y, z - other.z);
 }
 
 Vector3D Vector3D::operator*(double multiplyFactor)
 {
 	return Vector3D(x * multiplyFactor, y * multiplyFactor, z * multiplyFactor);
+}
+
+bool Vector3D::operator==(Vector3D other)
+{
+	return x == other.x
+		&& y == other.y
+		&& z == other.z;
 }

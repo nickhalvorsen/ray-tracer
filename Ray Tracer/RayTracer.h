@@ -3,6 +3,7 @@
 #include <vector>
 #include "Sphere.h"
 #include "Ray.h"
+#include "Segment3D.h"
 
 
 class RayTracer
@@ -20,4 +21,5 @@ private:
 	Color rayTrace(Ray ray, int depth);
 	Sphere* getClosestIntersection(Ray ray, Vector3D& collisionPoint);
 	Color getColorWithLight(Sphere* object, Vector3D pointOnObject);
+	bool anyOtherObjectsIntersectSegment(Segment3D segment, Sphere* objectToExclude);
 };

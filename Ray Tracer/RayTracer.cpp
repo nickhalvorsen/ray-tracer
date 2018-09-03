@@ -13,7 +13,7 @@ RayTracer::RayTracer()
 {
 	sceneObjects.push_back(Sphere(Vector3D(-5, 5, -5), 1, Color(250, 200, 200)));
 	sceneObjects.push_back(Sphere(Vector3D(-5, 0, -5), 1, Color(250, 250, 200)));
-	sceneObjects.push_back(Sphere(Vector3D(-3, 2, -5), 1, Color(100, 250, 200)));
+	sceneObjects.push_back(Sphere(Vector3D(-3, 1.5, -5), .2, Color(100, 250, 200)));
 	sceneObjects.push_back(Sphere(Vector3D(0, 0, -5), 1, Color(200, 250, 200)));
 	lightSources.push_back(Vector3D(1, 5, -5));
 }
@@ -117,9 +117,14 @@ Color RayTracer::getColorWithLight(Sphere* object, Vector3D pointOnObject)
 
 
 
-	
+	//Segment3D betweenLightAndObject(Ray(lightSources[0], lightDirection), (lightSources[0] - pointOnObject).getLength());
+	Segment3D betweenLightAndObject(Ray(lightSources[0], lightDirection * -1), (lightSources[0] - pointOnObject).getLength());
 
-	// todo test if light source is bl0cked
+
+	if (anyOtherObjectsIntersectSegment(betweenLightAndObject, object))
+	{
+		return Color(0, 0, 0);
+	}
 
 	double val = std::max(normal.dot(lightDirection), 0.0);
 	double intensity = 1; // todo refactor this into light class
@@ -137,4 +142,23 @@ Color RayTracer::getColorWithLight(Sphere* object, Vector3D pointOnObject)
 	
 
 	return Color(r, g, b);
+}
+
+
+bool RayTracer::anyOtherObjectsIntersectSegment(Segment3D segment, Sphere* objectToExclude)
+{
+	for (Sphere & sceneObject : sceneObjects) 
+	{
+		if (sceneObject == *objectToExclude) 
+		{
+			continue;
+		}
+
+		if (sceneObject.intersects(segment))
+		{
+			return true;
+		}
+	}
+
+	return false;
 }

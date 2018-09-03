@@ -5,6 +5,7 @@
 class Ray
 {
 public:
+	Ray();
 	Ray(Vector3D origin, Vector3D direction);
 	Vector3D origin;
 	Vector3D getDirection();

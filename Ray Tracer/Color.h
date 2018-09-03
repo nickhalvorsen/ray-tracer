@@ -8,5 +8,6 @@ public:
 	unsigned char g;
 	unsigned char b;
 	Color add(Color other);
+	bool operator==(Color other);
 };
 

@@ -55,3 +55,22 @@ Vector3D Sphere::getNormal(Vector3D pointOnSurface)
 	Vector3D n = pointOnSurface - center;
 	return n.normalized();
 }
+
+bool Sphere::operator==(Sphere other)
+{
+	return center == other.center
+		&& radius == other.radius
+		&& color == other.color;
+}
+
+bool Sphere::intersects(Segment3D segment)
+{
+	IntersectionPoint point;
+	if (getClosestIntersection(segment.ray, point)
+		&& point.distance < segment.distance)
+	{
+		return true;
+	}
+
+	return false;
+}

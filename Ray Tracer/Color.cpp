@@ -25,3 +25,10 @@ Color Color::add(Color other)
 	unsigned char newB = std::min(b + other.b, 255);
 	return Color(newR, newG, newB);
 }
+
+bool Color::operator==(Color other)
+{
+	return r == other.r
+		&& g == other.g
+		&& b == other.b;
+}

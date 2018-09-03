@@ -7,6 +7,8 @@ Ray::Ray(Vector3D origin, Vector3D direction)
 	this->direction = direction.normalized();
 }
 
+Ray::Ray() : Ray(Vector3D(), Vector3D()) { }
+
 Vector3D Ray::getDirection() 
 {
 	return direction;
