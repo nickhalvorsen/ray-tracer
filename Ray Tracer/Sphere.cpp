@@ -50,35 +50,8 @@ bool Sphere::getClosestIntersection(Ray ray, IntersectionPoint& intersectionPoin
 	return true;
 }
 
-/*
-
-t = distance of intersection along ray 
-
-d = diretion vector
-
-// Intersects ray r = p + td, |d| = 1, with sphere s and, if intersecting,
-// returns t value of intersection and intersection point q
-int IntersectRaySphere(Point p, Vector d, Sphere s, float &t, Point &q)
+Vector3D Sphere::getNormal(Vector3D pointOnSurface)
 {
-
-
-
-// Exit if r’s origin outside s (c > 0) and r pointing away from s (b > 0)
-if (c > 0.0f && b > 0.0f) return 0;
-float discr = b*b - c;
-
-// A negative discriminant corresponds to ray missing sphere
-if (discr < 0.0f) return 0;
-
-// Ray now found to intersect sphere, compute smallest t value of intersection
-t = -b - Sqrt(discr);
-
-// If t is negative, ray started inside sphere so clamp t to zero
-if (t < 0.0f) t = 0.0f;
-q = p + t * d;
-
-return 1;
+	Vector3D n = pointOnSurface - center;
+	return n.normalized();
 }
-
-
-*/

@@ -16,6 +16,7 @@ public:
 	double radius;
 	Color color;
 	bool getClosestIntersection(Ray ray, IntersectionPoint& point);
+	Vector3D getNormal(Vector3D pointOnObject);
 
 private:
 

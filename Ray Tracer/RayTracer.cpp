@@ -4,6 +4,7 @@
 
 #define _USE_MATH_DEFINES
 #include <math.h>
+#include <algorithm>
 
 const Color RayTracer::backgroundColor = Color(2, 2, 2);
 const int RayTracer::maxDepth = 1;
@@ -12,8 +13,9 @@ RayTracer::RayTracer()
 {
 	sceneObjects.push_back(Sphere(Vector3D(-5, 5, -5), 1, Color(250, 200, 200)));
 	sceneObjects.push_back(Sphere(Vector3D(-5, 0, -5), 1, Color(250, 250, 200)));
+	sceneObjects.push_back(Sphere(Vector3D(-3, 2, -5), 1, Color(100, 250, 200)));
 	sceneObjects.push_back(Sphere(Vector3D(0, 0, -5), 1, Color(200, 250, 200)));
-	lightSources.push_back(Vector3D(0, .5, 3));
+	lightSources.push_back(Vector3D(1, 5, -5));
 }
 
 void RayTracer::renderPicture(int imageWidth, int imageHeight, char* filename) 
@@ -94,6 +96,7 @@ Sphere* RayTracer::getClosestIntersection(Ray ray, Vector3D& intersectionPoint)
 		{
 			intersectedObject = &sceneObjects[i];
 			closestIntersection = point.distance;
+			intersectionPoint = point.point;
 		}
 	}
 
@@ -102,5 +105,36 @@ Sphere* RayTracer::getClosestIntersection(Ray ray, Vector3D& intersectionPoint)
 
 Color RayTracer::getColorWithLight(Sphere* object, Vector3D pointOnObject)
 {
-	return object->color;
+	bool lambertianShadingEnabled = true;
+
+	if (!lambertianShadingEnabled)
+	{
+		return object->color;
+	}
+
+	Vector3D normal = object->getNormal(pointOnObject);
+	Vector3D lightDirection = (lightSources[0] - pointOnObject).normalized(); // direction from point towards light
+
+
+
+	
+
+	// todo test if light source is bl0cked
+
+	double val = std::max(normal.dot(lightDirection), 0.0);
+	double intensity = 1; // todo refactor this into light class
+
+	int r = object->color.r * val * intensity;
+	int g = object->color.g * val * intensity;
+	int b = object->color.b * val * intensity;
+	r = std::max(r, 0);
+	r = std::min(r, 255);
+	g = std::max(g, 0);
+	g = std::min(g, 255);
+	b = std::max(b, 0);
+	b = std::min(b, 255);
+
+	
+
+	return Color(r, g, b);
 }
