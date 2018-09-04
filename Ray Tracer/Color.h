@@ -2,12 +2,16 @@
 class Color
 {
 public:
-	Color(unsigned char, unsigned char, unsigned char);
+	Color(int r, int g, int b);
 	Color();
-	unsigned char r;
-	unsigned char g;
-	unsigned char b;
+	int r;
+	int g;
+	int b;
 	Color add(Color other);
 	bool operator==(Color other);
+	Color operator*(double coefficient);
+	Color operator+(Color other);
+private:
+	int validate(int rgb);
 };
 

@@ -2,13 +2,11 @@
 #include "Color.h"
 #include <algorithm>
 
-// todo handle clamping values between 0-255
-
-Color::Color(unsigned char r, unsigned char g, unsigned char b)
+Color::Color(int r, int g, int b)
 {
-	this->r = r;
-	this->g = g;
-	this->b = b;
+	this->r = validate(r);
+	this->g = validate(g);
+	this->b = validate(b);
 }
 
 Color::Color()
@@ -20,10 +18,7 @@ Color::Color()
 
 Color Color::add(Color other)
 {
-	unsigned char newR = std::min(r + other.r, 255);
-	unsigned char newG = std::min(g + other.g, 255);
-	unsigned char newB = std::min(b + other.b, 255);
-	return Color(newR, newG, newB);
+	return Color(r + other.r, g + other.g, b + other.b);
 }
 
 bool Color::operator==(Color other)
@@ -31,4 +26,22 @@ bool Color::operator==(Color other)
 	return r == other.r
 		&& g == other.g
 		&& b == other.b;
+}
+
+Color Color::operator*(double coefficient)
+{
+	return Color(r * coefficient, g * coefficient, b * coefficient);
+}
+
+Color Color::operator+(Color other)
+{
+	return Color(r + other.r, g + other.g, b + other.b);
+}
+
+int Color::validate(int rgb)
+{
+	rgb = std::min(rgb, 255);
+	rgb = std::max(rgb, 0);
+
+	return rgb;
 }

@@ -105,13 +105,15 @@ Sphere* RayTracer::getClosestIntersection(Ray ray, Vector3D& intersectionPoint)
 
 Color RayTracer::getColorWithLight(Sphere* object, Vector3D pointOnObject)
 {
-	bool lambertianShadingEnabled = true;
 
-	if (!lambertianShadingEnabled)
-	{
-		return object->color;
-	}
+	// ambient light
+	double ambientCoefficient = 0.1;
 
+	Color colorAtPoint = object->color * ambientCoefficient;
+	// todo check this https://stackoverflow.com/questions/33054399/raytracing-lighting-equations
+
+
+	// Diffuse lighting (aka "lambertian")
 	Vector3D normal = object->getNormal(pointOnObject);
 	Vector3D lightDirection = (lightSources[0] - pointOnObject).normalized(); // direction from point towards light
 
@@ -123,7 +125,7 @@ Color RayTracer::getColorWithLight(Sphere* object, Vector3D pointOnObject)
 
 	if (anyOtherObjectsIntersectSegment(betweenLightAndObject, object))
 	{
-		return Color(0, 0, 0);
+		return colorAtPoint;
 	}
 
 	double val = std::max(normal.dot(lightDirection), 0.0);
@@ -141,7 +143,7 @@ Color RayTracer::getColorWithLight(Sphere* object, Vector3D pointOnObject)
 
 	
 
-	return Color(r, g, b);
+	return colorAtPoint + Color(r, g, b);
 }
 
 
