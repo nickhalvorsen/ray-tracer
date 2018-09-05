@@ -37,7 +37,7 @@ void RayTracer::renderPicture(int imageWidth, int imageHeight, char* filename)
 Color RayTracer::renderPixel(int imageWidth, int imageHeight, int x, int y)
 {
 	Ray ray = getRayForPixel(imageWidth, imageHeight, x, y);
-	return rayTrace(ray, 0);
+	return traceRay(ray, 0);
 }
 
 // http://www.scratchapixel.com/lessons/3d-basic-rendering/ray-tracing-generating-camera-rays/generating-camera-rays?url=3d-basic-rendering/ray-tracing-generating-camera-rays/generating-camera-rays
@@ -54,7 +54,7 @@ Ray RayTracer::getRayForPixel(int imageWidth, int imageHeight, int x, int y)
 	return Ray(rayOrigin, rayDirection);
 }
 
-Color RayTracer::rayTrace(Ray ray, int depth)
+Color RayTracer::traceRay(Ray ray, int depth)
 {
 	Vector3D collisionPoint;
 	Sphere* collidedObject = getClosestIntersection(ray, collisionPoint);
@@ -89,14 +89,15 @@ Sphere* RayTracer::getClosestIntersection(Ray ray, Vector3D& intersectionPoint)
 
 	for (int i = 0; i < sceneObjects.size(); i++)
 	{
-		IntersectionPoint point;
-		bool intersected = sceneObjects[i].getClosestIntersection(ray, point);
+		Vector3D intersectionPoint;
+		double intersectionDistance;
+		bool intersected = sceneObjects[i].getClosestIntersection(ray, intersectionPoint, intersectionDistance);
 
-		if (intersected && point.distance < closestIntersection)
+		if (intersected && intersectionDistance < closestIntersection)
 		{
 			intersectedObject = &sceneObjects[i];
-			closestIntersection = point.distance;
-			intersectionPoint = point.point;
+			closestIntersection = intersectionDistance;
+			intersectionPoint = intersectionPoint;
 		}
 	}
 
@@ -105,47 +106,56 @@ Sphere* RayTracer::getClosestIntersection(Ray ray, Vector3D& intersectionPoint)
 
 Color RayTracer::getColorWithLight(Sphere* object, Vector3D pointOnObject)
 {
-
-	// ambient light
-	double ambientCoefficient = 0.1;
-
-	Color colorAtPoint = object->color * ambientCoefficient;
 	// todo check this https://stackoverflow.com/questions/33054399/raytracing-lighting-equations
 
+	bool enableAmbientLight = true;
+	bool enableDiffuseLight = true;
 
+	Color colorAtPoint(0, 0, 0);
+
+	if (enableAmbientLight)
+	{
+		double ambientCoefficient = 0.1;
+		colorAtPoint += getAmbientLight(object) * ambientCoefficient;
+	}
+
+	if (enableDiffuseLight)
+	{
+		double diffuseCoefficient = 1;
+		colorAtPoint += getDiffuseLight(object, pointOnObject) * diffuseCoefficient;
+	}
+
+	return colorAtPoint;
+}
+
+Color RayTracer::getAmbientLight(Sphere* object)
+{
+	return object->color;
+}
+
+Color RayTracer::getDiffuseLight(Sphere* object, Vector3D pointOnObject)
+{
 	// Diffuse lighting (aka "lambertian")
 	Vector3D normal = object->getNormal(pointOnObject);
 	Vector3D lightDirection = (lightSources[0] - pointOnObject).normalized(); // direction from point towards light
 
-
-
-	//Segment3D betweenLightAndObject(Ray(lightSources[0], lightDirection), (lightSources[0] - pointOnObject).getLength());
 	Segment3D betweenLightAndObject(Ray(lightSources[0], lightDirection * -1), (lightSources[0] - pointOnObject).getLength());
-
 
 	if (anyOtherObjectsIntersectSegment(betweenLightAndObject, object))
 	{
-		return colorAtPoint;
+		return Color(0, 0, 0);
 	}
 
 	double val = std::max(normal.dot(lightDirection), 0.0);
-	double intensity = 1; // todo refactor this into light class
+	double intensity = 1; // todo: this would be an attribute of the light 
+	// todo: change intensity based on distance
 
 	int r = object->color.r * val * intensity;
 	int g = object->color.g * val * intensity;
 	int b = object->color.b * val * intensity;
-	r = std::max(r, 0);
-	r = std::min(r, 255);
-	g = std::max(g, 0);
-	g = std::min(g, 255);
-	b = std::max(b, 0);
-	b = std::min(b, 255);
-
 	
-
-	return colorAtPoint + Color(r, g, b);
+	Color(r, g, b);
 }
-
 
 bool RayTracer::anyOtherObjectsIntersectSegment(Segment3D segment, Sphere* objectToExclude)
 {

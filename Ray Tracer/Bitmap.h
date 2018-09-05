@@ -23,6 +23,6 @@ private:
 	// It is stored as BGR because that is how it's written to a bitmap file.
 	unsigned char* pixels;
 
-	bool isWithinImage(int x, int y);
-	int arrayIndexForCoordinates(int x, int y);
+	bool validCoords(int x, int y);
+	int arrayIndexForCoords(int x, int y);
 };

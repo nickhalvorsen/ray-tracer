@@ -4,9 +4,9 @@
 
 Color::Color(int r, int g, int b)
 {
-	this->r = validate(r);
-	this->g = validate(g);
-	this->b = validate(b);
+	this->r = validateRgb(r);
+	this->g = validateRgb(g);
+	this->b = validateRgb(b);
 }
 
 Color::Color()
@@ -38,7 +38,15 @@ Color Color::operator+(Color other)
 	return Color(r + other.r, g + other.g, b + other.b);
 }
 
-int Color::validate(int rgb)
+Color Color::operator+=(Color other)
+{
+	r = validateRgb(r + other.r);
+	g = validateRgb(g + other.g);
+	b = validateRgb(b + other.b);
+	return *this;
+}
+
+int Color::validateRgb(int rgb)
 {
 	rgb = std::min(rgb, 255);
 	rgb = std::max(rgb, 0);

@@ -12,8 +12,8 @@ Sphere::Sphere(Vector3D center, double radius, Color color)
 
 Sphere::Sphere() : Sphere(Vector3D(0, 0, 0), 1, Color(0, 0, 0)) { }
 
-//http://www.r-5.org/files/books/computers/algo-list/realtime-3d/Christer_Ericson-Real-Time_Collision_Detection-EN.pdf page 178
-bool Sphere::getClosestIntersection(Ray ray, IntersectionPoint& intersectionPoint)
+// Algorithm reference: http://www.r-5.org/files/books/computers/algo-list/realtime-3d/Christer_Ericson-Real-Time_Collision_Detection-EN.pdf page 178
+bool Sphere::getClosestIntersection(Ray ray, Vector3D& intersectionPoint, double& intersectionDistance)
 {
 	Vector3D m = ray.origin - center;
 	double b = m.dot(ray.getDirection());
@@ -42,18 +42,15 @@ bool Sphere::getClosestIntersection(Ray ray, IntersectionPoint& intersectionPoin
 	double distance = -b - sqrt(discr);
 
 	// If t is negative, ray started inside sphere so clamp t to zero
-	distance = std::max(distance, 0.0);
-	Vector3D point = ray.pointAlongRay(distance);
-
-	intersectionPoint = IntersectionPoint(point, distance);
+	intersectionDistance = std::max(distance, 0.0);
+	intersectionPoint = ray.pointAlongRay(intersectionDistance);
 
 	return true;
 }
 
 Vector3D Sphere::getNormal(Vector3D pointOnSurface)
 {
-	Vector3D n = pointOnSurface - center;
-	return n.normalized();
+	return (pointOnSurface - center).normalized();
 }
 
 bool Sphere::operator==(Sphere other)
@@ -65,9 +62,10 @@ bool Sphere::operator==(Sphere other)
 
 bool Sphere::intersects(Segment3D segment)
 {
-	IntersectionPoint point;
-	if (getClosestIntersection(segment.ray, point)
-		&& point.distance < segment.distance)
+	Vector3D dummy;
+	double intersectionDistance;
+	if (getClosestIntersection(segment.ray, dummy, intersectionDistance)
+		&& intersectionDistance < segment.distance)
 	{
 		return true;
 	}

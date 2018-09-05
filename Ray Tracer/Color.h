@@ -11,7 +11,8 @@ public:
 	bool operator==(Color other);
 	Color operator*(double coefficient);
 	Color operator+(Color other);
+	Color operator+=(Color other);
 private:
-	int validate(int rgb);
+	int validateRgb(int rgb);
 };
 

@@ -4,7 +4,6 @@
 #include "Vector3D.h"
 #include "Ray.h"
 #include "Segment3D.h"
-#include "IntersectionPoint.h"
 
 #include <vector>
 
@@ -16,11 +15,8 @@ public:
 	Vector3D center;
 	double radius;
 	Color color;
-	bool getClosestIntersection(Ray ray, IntersectionPoint& point);
+	bool getClosestIntersection(Ray ray, Vector3D& intersectionPoint, double& intersectionDistance);
 	Vector3D getNormal(Vector3D pointOnObject);
 	bool intersects(Segment3D segment);
 	bool operator==(Sphere other);
-
-private:
-
 };
