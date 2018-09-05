@@ -157,6 +157,7 @@
     <ClInclude Include="pch.h" />
     <ClInclude Include="Ray.h" />
     <ClInclude Include="RayTracer.h" />
+    <ClInclude Include="SceneObject.h" />
     <ClInclude Include="Segment3D.h" />
     <ClInclude Include="Sphere.h" />
     <ClInclude Include="Vector3D.h" />
@@ -170,6 +171,7 @@
     </ClCompile>
     <ClCompile Include="Ray.cpp" />
     <ClCompile Include="RayTracer.cpp" />
+    <ClCompile Include="SceneObject.cpp" />
     <ClCompile Include="Segment3D.cpp" />
     <ClCompile Include="Sphere.cpp" />
     <ClCompile Include="Vector3D.cpp" />

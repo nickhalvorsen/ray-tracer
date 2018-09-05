@@ -5,16 +5,18 @@
 #define _USE_MATH_DEFINES
 #include <math.h>
 #include <algorithm>
+#include <memory>
 
 const Color RayTracer::backgroundColor = Color(2, 2, 2);
 const int RayTracer::maxDepth = 1;
 
 RayTracer::RayTracer()
 {
-	sceneObjects.push_back(Sphere(Vector3D(-5, 5, -5), 1, Color(250, 200, 200)));
-	sceneObjects.push_back(Sphere(Vector3D(-5, 0, -5), 1, Color(250, 250, 200)));
-	sceneObjects.push_back(Sphere(Vector3D(-3, 1.5, -5), .2, Color(100, 250, 200)));
-	sceneObjects.push_back(Sphere(Vector3D(0, 0, -5), 1, Color(200, 250, 200)));
+	sceneObjects.push_back(std::shared_ptr<SceneObject>(new Sphere(1, Vector3D(-5, 5, -5), 1, Color(250, 200, 200))));
+	sceneObjects.push_back(std::shared_ptr<SceneObject>(new Sphere(2, Vector3D(-5, 0, -5), 1, Color(250, 250, 200))));
+	sceneObjects.push_back(std::shared_ptr<SceneObject>(new Sphere(3, Vector3D(-3, 1.5, -5), .2, Color(100, 250, 200))));
+	sceneObjects.push_back(std::shared_ptr<SceneObject>(new Sphere(4, Vector3D(0, 0, -5), 1, Color(200, 250, 200))));
+
 	lightSources.push_back(Vector3D(1, 5, -5));
 }
 
@@ -57,7 +59,8 @@ Ray RayTracer::getRayForPixel(int imageWidth, int imageHeight, int x, int y)
 Color RayTracer::traceRay(Ray ray, int depth)
 {
 	Vector3D collisionPoint;
-	Sphere* collidedObject = getClosestIntersection(ray, collisionPoint);
+
+	std::shared_ptr<SceneObject> collidedObject = getClosestIntersection(ray, collisionPoint);
 
 	if (collidedObject == nullptr)
 	{
@@ -82,20 +85,20 @@ Color RayTracer::traceRay(Ray ray, int depth)
 	return colorAtThisPoint;
 }
 
-Sphere* RayTracer::getClosestIntersection(Ray ray, Vector3D& intersectionPoint)
+std::shared_ptr<SceneObject> RayTracer::getClosestIntersection(Ray ray, Vector3D& intersectionPoint)
 {
 	double closestIntersection = 1000000000;
-	Sphere* intersectedObject = nullptr;
+	std::shared_ptr<SceneObject> intersectedObject = nullptr;
 
 	for (int i = 0; i < sceneObjects.size(); i++)
 	{
 		Vector3D point;
 		double intersectionDistance;
-		bool intersected = sceneObjects[i].getClosestIntersection(ray, point, intersectionDistance);
+		bool intersected = sceneObjects[i]->getClosestIntersection(ray, point, intersectionDistance);
 
 		if (intersected && intersectionDistance < closestIntersection)
-		{
-			intersectedObject = &sceneObjects[i];
+		{ 
+			intersectedObject = sceneObjects[i];
 			closestIntersection = intersectionDistance;
 			intersectionPoint = point;
 		}
@@ -104,7 +107,7 @@ Sphere* RayTracer::getClosestIntersection(Ray ray, Vector3D& intersectionPoint)
 	return intersectedObject;
 }
 
-Color RayTracer::getColorWithLight(Sphere* object, Vector3D pointOnObject)
+Color RayTracer::getColorWithLight(const std::shared_ptr<SceneObject>& object, Vector3D pointOnObject)
 {
 	// todo check this https://stackoverflow.com/questions/33054399/raytracing-lighting-equations
 
@@ -128,12 +131,12 @@ Color RayTracer::getColorWithLight(Sphere* object, Vector3D pointOnObject)
 	return colorAtPoint;
 }
 
-Color RayTracer::getAmbientLight(Sphere* object)
+Color RayTracer::getAmbientLight(const std::shared_ptr<SceneObject>& object)
 {
 	return object->color;
 }
 
-Color RayTracer::getDiffuseLight(Sphere* object, Vector3D pointOnObject)
+Color RayTracer::getDiffuseLight(const std::shared_ptr<SceneObject>& object, Vector3D pointOnObject)
 {
 	// Diffuse lighting (aka "lambertian")
 	Vector3D normal = object->getNormal(pointOnObject);
@@ -157,16 +160,16 @@ Color RayTracer::getDiffuseLight(Sphere* object, Vector3D pointOnObject)
 	Color(r, g, b);
 }
 
-bool RayTracer::anyOtherObjectsIntersectSegment(Segment3D segment, Sphere* objectToExclude)
+bool RayTracer::anyOtherObjectsIntersectSegment(Segment3D segment, std::shared_ptr<SceneObject> objectToExclude)
 {
-	for (Sphere & sceneObject : sceneObjects) 
+	for (std::shared_ptr<SceneObject> sceneObject : sceneObjects)
 	{
-		if (sceneObject == *objectToExclude) 
+		if (sceneObject->getId() == objectToExclude->getId()) 
 		{
 			continue;
 		}
 
-		if (sceneObject.intersects(segment))
+		if (sceneObject->intersects(segment))
 		{
 			return true;
 		}
