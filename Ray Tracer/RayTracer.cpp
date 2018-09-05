@@ -89,15 +89,15 @@ Sphere* RayTracer::getClosestIntersection(Ray ray, Vector3D& intersectionPoint)
 
 	for (int i = 0; i < sceneObjects.size(); i++)
 	{
-		Vector3D intersectionPoint;
+		Vector3D point;
 		double intersectionDistance;
-		bool intersected = sceneObjects[i].getClosestIntersection(ray, intersectionPoint, intersectionDistance);
+		bool intersected = sceneObjects[i].getClosestIntersection(ray, point, intersectionDistance);
 
 		if (intersected && intersectionDistance < closestIntersection)
 		{
 			intersectedObject = &sceneObjects[i];
 			closestIntersection = intersectionDistance;
-			intersectionPoint = intersectionPoint;
+			intersectionPoint = point;
 		}
 	}
 
