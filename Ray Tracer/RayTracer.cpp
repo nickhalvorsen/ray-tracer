@@ -23,23 +23,6 @@ RayTracer::RayTracer()
 	sceneObjects.push_back(std::shared_ptr<SceneObject>(new Quad(5, Vector3D(-5, -1, 5), Vector3D(-5, -1, -5), Vector3D(5, -1, -5), Vector3D(5, -1, 5), Color(200, 177, 12))));
 
 	lightSources.push_back(LightSource(Vector3D(1, 5, -5), Color(255, 255, 255)));
-	lightSources.push_back(LightSource(Vector3D(3, 5, -5), Color(100, 0, 0)));
-}
-
-void RayTracer::renderPicture(int imageWidth, int imageHeight, char* filename) 
-{
-	Bitmap bitmap(imageWidth, imageHeight);
-
-	for (int x = 0; x < imageWidth; x++)
-	{
-		for (int y = 0; y < imageHeight; y++) 
-		{
-			Color thisColor = renderPixel(imageWidth, imageHeight, x, y);
-			bitmap.setPixel(x, y, thisColor);
-		}
-	}
-
-	bitmap.writeToFile(filename);
 }
 
 Color RayTracer::renderPixel(int imageWidth, int imageHeight, int x, int y)

@@ -154,6 +154,7 @@
   <ItemGroup>
     <ClInclude Include="Color.h" />
     <ClInclude Include="Bitmap.h" />
+    <ClInclude Include="ImageRenderer.h" />
     <ClInclude Include="LightSource.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="Quad.h" />
@@ -168,6 +169,7 @@
   <ItemGroup>
     <ClCompile Include="Color.cpp" />
     <ClCompile Include="Bitmap.cpp" />
+    <ClCompile Include="ImageRenderer.cpp" />
     <ClCompile Include="LightSource.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="pch.cpp">

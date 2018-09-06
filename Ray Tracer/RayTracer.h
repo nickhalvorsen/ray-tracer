@@ -12,13 +12,12 @@ class RayTracer
 {
 public:
 	RayTracer();
-	void renderPicture(int imageWidth, int imageHeight, char* filename);
+	Color renderPixel(int imageWidth, int imageHeight, int x, int y);
 private:
 	const static Color backgroundColor;
 	const static int maxDepth;
 	std::vector< std::shared_ptr<SceneObject> > sceneObjects;
 	std::vector<LightSource> lightSources;
-	Color renderPixel(int imageWidth, int imageHeight, int x, int y);
 	Ray getRayForPixel(int imageWidth, int imageHeight, int x, int y);
 	Color traceRay(Ray ray, int depth);
 	std::shared_ptr<SceneObject> getClosestIntersection(Ray ray, Vector3D& collisionPoint);
