@@ -28,6 +28,14 @@ double Vector3D::dot(Vector3D other)
 	return x*other.x + y*other.y + z*other.z;
 }
 
+Vector3D Vector3D::cross(Vector3D other)
+{
+	double tempX = y * other.z - z * other.y;
+	double tempY = z * other.x - x * other.z;
+	double tempZ = x * other.y - y * other.x;
+	return Vector3D(tempX, tempY, tempZ);
+}
+
 Vector3D Vector3D::operator+(Vector3D other)
 {
 	return Vector3D(x + other.x, y + other.y, z + other.z);

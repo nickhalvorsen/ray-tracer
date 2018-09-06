@@ -2,7 +2,7 @@
 
 #include <vector>
 #include <memory>
-#include "Sphere.h"
+#include "SceneObject.h"
 #include "Ray.h"
 #include "Segment3D.h"
 

@@ -8,16 +8,15 @@
 
 #include <vector>
 
-class Sphere : public SceneObject
+class Triangle : public SceneObject
 {
 public:
-	Sphere();
-	Sphere(int id, Vector3D center, double radius, Color color);
+	Triangle(int id, Vector3D point1, Vector3D point2, Vector3D point3, Color color);
 
 	bool getClosestIntersection(Ray ray, Vector3D& intersectionPoint, double& intersectionDistance);
 	Vector3D getNormal(Vector3D pointOnObject);
-
 private:
-	Vector3D center;
-	double radius;
+	Vector3D point1;
+	Vector3D point2;
+	Vector3D point3;
 };
