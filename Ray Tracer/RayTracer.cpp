@@ -23,6 +23,7 @@ RayTracer::RayTracer()
 	sceneObjects.push_back(std::shared_ptr<SceneObject>(new Quad(5, Vector3D(-5, -1, 5), Vector3D(-5, -1, -5), Vector3D(5, -1, -5), Vector3D(5, -1, 5), Color(200, 177, 12))));
 
 	lightSources.push_back(LightSource(Vector3D(1, 5, -5), Color(255, 255, 255)));
+	lightSources.push_back(LightSource(Vector3D(3, 5, -5), Color(100, 0, 0)));
 }
 
 void RayTracer::renderPicture(int imageWidth, int imageHeight, char* filename) 
@@ -130,7 +131,7 @@ Color RayTracer::getColorWithLight(const std::shared_ptr<SceneObject>& object, V
 	if (enableDiffuseLight)
 	{
 		double diffuseCoefficient = 1;
-		colorAtPoint += getDiffuseLight(object, pointOnObject) * diffuseCoefficient;
+		colorAtPoint += getAllDiffuseLight(object, pointOnObject) * diffuseCoefficient;
 	}
 
 	return colorAtPoint;
@@ -141,26 +142,38 @@ Color RayTracer::getAmbientLight(const std::shared_ptr<SceneObject>& object)
 	return object->color;
 }
 
-Color RayTracer::getDiffuseLight(const std::shared_ptr<SceneObject>& object, Vector3D pointOnObject)
+// Diffuse lighting (aka "lambertian")
+Color RayTracer::getAllDiffuseLight(const std::shared_ptr<SceneObject>& object, Vector3D pointOnObject)
 {
-	// Diffuse lighting (aka "lambertian")
-	Vector3D normal = object->getNormal(pointOnObject);
-	Vector3D lightDirection = (lightSources[0].point - pointOnObject).normalized(); // direction from point towards light
+	Color colorAtPoint(0, 0, 0);
 
-	Segment3D betweenLightAndObject(Ray(lightSources[0].point, lightDirection * -1), (lightSources[0].point - pointOnObject).getLength());
+	for (int i = 0; i < lightSources.size(); i++)
+	{
+		colorAtPoint += getDiffuseLight(object, pointOnObject, lightSources[i]);
+	}
+
+	return colorAtPoint;
+}
+
+Color RayTracer::getDiffuseLight(const std::shared_ptr<SceneObject>& object, Vector3D pointOnObject, LightSource lightSource)
+{
+	Vector3D normal = object->getNormal(pointOnObject);
+	Vector3D pointToLight = (lightSources[0].point - pointOnObject).normalized();
+
+	Segment3D betweenLightAndObject(Ray(lightSource.point, pointToLight * -1), (lightSource.point - pointOnObject).getLength());
 
 	if (anyOtherObjectsIntersectSegment(betweenLightAndObject, object))
 	{
 		return Color(0, 0, 0);
 	}
 
-	double val = std::max(normal.dot(lightDirection), 0.0);
+	double val = std::max(normal.dot(pointToLight), 0.0);
 	// todo: change intensity based on distance
 
-	int r = object->color.r * val * (255/lightSources[0].intensity.r);
-	int g = object->color.g * val * (255/lightSources[0].intensity.g);
-	int b = object->color.b * val * (255/lightSources[0].intensity.b);
-	
+	int r = object->color.r * val * (lightSource.intensity.r / 255.0);
+	int g = object->color.g * val * (lightSource.intensity.g / 255.0);
+	int b = object->color.b * val * (lightSource.intensity.b / 255.0);
+
 	Color(r, g, b);
 }
 

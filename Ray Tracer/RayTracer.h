@@ -24,6 +24,7 @@ private:
 	std::shared_ptr<SceneObject> getClosestIntersection(Ray ray, Vector3D& collisionPoint);
 	Color getColorWithLight(const std::shared_ptr<SceneObject>& object, Vector3D pointOnObject);
 	Color getAmbientLight(const std::shared_ptr<SceneObject>& object);
-	Color getDiffuseLight(const std::shared_ptr<SceneObject>& object, Vector3D pointOnObject);
+	Color getAllDiffuseLight(const std::shared_ptr<SceneObject>& object, Vector3D pointOnObject);
+	Color getDiffuseLight(const std::shared_ptr<SceneObject>& object, Vector3D pointOnObject, LightSource lightSource);
 	bool anyOtherObjectsIntersectSegment(Segment3D segment, std::shared_ptr<SceneObject> objectToExclude);
 };
