@@ -11,6 +11,7 @@
 class Triangle : public SceneObject
 {
 public:
+	Triangle();
 	Triangle(int id, Vector3D point1, Vector3D point2, Vector3D point3, Color color);
 
 	bool getClosestIntersection(Ray ray, Vector3D& intersectionPoint, double& intersectionDistance);

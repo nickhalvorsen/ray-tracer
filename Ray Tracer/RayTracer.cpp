@@ -3,6 +3,7 @@
 #include "Bitmap.h"
 #include "Sphere.h"
 #include "Triangle.h"
+#include "Quad.h"
 
 #define _USE_MATH_DEFINES
 #include <math.h>
@@ -18,7 +19,8 @@ RayTracer::RayTracer()
 	sceneObjects.push_back(std::shared_ptr<SceneObject>(new Sphere(2, Vector3D(-5, 0, -5), 1, Color(250, 250, 200))));
 	sceneObjects.push_back(std::shared_ptr<SceneObject>(new Sphere(3, Vector3D(-3, 1.5, -5), .2, Color(100, 250, 200))));
 	sceneObjects.push_back(std::shared_ptr<SceneObject>(new Sphere(4, Vector3D(0, 0, -5), 1, Color(200, 250, 200))));
-	sceneObjects.push_back(std::shared_ptr<SceneObject>(new Triangle(5, Vector3D(3, -1, -6), Vector3D(1, -1, -6), Vector3D(1, -2, -4), Color(200, 250, 200))));
+	sceneObjects.push_back(std::shared_ptr<SceneObject>(new Triangle(5, Vector3D(4, -1, -6), Vector3D(2, -2, -4), Vector3D(2, -1, -6), Color(200, 200, 250))));
+	sceneObjects.push_back(std::shared_ptr<SceneObject>(new Quad(5, Vector3D(-5, -1, 5), Vector3D(-5, -1, -5), Vector3D(5, -1, -5), Vector3D(5, -1, 5), Color(200, 177, 12))));
 
 	lightSources.push_back(Vector3D(1, 5, -5));
 }
