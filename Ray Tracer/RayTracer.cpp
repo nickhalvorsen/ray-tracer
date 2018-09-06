@@ -22,7 +22,7 @@ RayTracer::RayTracer()
 	sceneObjects.push_back(std::shared_ptr<SceneObject>(new Triangle(5, Vector3D(4, -1, -6), Vector3D(2, -2, -4), Vector3D(2, -1, -6), Color(200, 200, 250))));
 	sceneObjects.push_back(std::shared_ptr<SceneObject>(new Quad(5, Vector3D(-5, -1, 5), Vector3D(-5, -1, -5), Vector3D(5, -1, -5), Vector3D(5, -1, 5), Color(200, 177, 12))));
 
-	lightSources.push_back(Vector3D(1, 5, -5));
+	lightSources.push_back(LightSource(Vector3D(1, 5, -5), Color(255, 255, 255)));
 }
 
 void RayTracer::renderPicture(int imageWidth, int imageHeight, char* filename) 
@@ -145,9 +145,9 @@ Color RayTracer::getDiffuseLight(const std::shared_ptr<SceneObject>& object, Vec
 {
 	// Diffuse lighting (aka "lambertian")
 	Vector3D normal = object->getNormal(pointOnObject);
-	Vector3D lightDirection = (lightSources[0] - pointOnObject).normalized(); // direction from point towards light
+	Vector3D lightDirection = (lightSources[0].point - pointOnObject).normalized(); // direction from point towards light
 
-	Segment3D betweenLightAndObject(Ray(lightSources[0], lightDirection * -1), (lightSources[0] - pointOnObject).getLength());
+	Segment3D betweenLightAndObject(Ray(lightSources[0].point, lightDirection * -1), (lightSources[0].point - pointOnObject).getLength());
 
 	if (anyOtherObjectsIntersectSegment(betweenLightAndObject, object))
 	{
@@ -155,12 +155,11 @@ Color RayTracer::getDiffuseLight(const std::shared_ptr<SceneObject>& object, Vec
 	}
 
 	double val = std::max(normal.dot(lightDirection), 0.0);
-	double intensity = 1; // todo: this would be an attribute of the light 
 	// todo: change intensity based on distance
 
-	int r = object->color.r * val * intensity;
-	int g = object->color.g * val * intensity;
-	int b = object->color.b * val * intensity;
+	int r = object->color.r * val * (255/lightSources[0].intensity.r);
+	int g = object->color.g * val * (255/lightSources[0].intensity.g);
+	int b = object->color.b * val * (255/lightSources[0].intensity.b);
 	
 	Color(r, g, b);
 }

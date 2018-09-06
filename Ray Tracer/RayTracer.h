@@ -5,6 +5,7 @@
 #include "SceneObject.h"
 #include "Ray.h"
 #include "Segment3D.h"
+#include "LightSource.h"
 
 
 class RayTracer
@@ -16,7 +17,7 @@ private:
 	const static Color backgroundColor;
 	const static int maxDepth;
 	std::vector< std::shared_ptr<SceneObject> > sceneObjects;
-	std::vector<Vector3D> lightSources;
+	std::vector<LightSource> lightSources;
 	Color renderPixel(int imageWidth, int imageHeight, int x, int y);
 	Ray getRayForPixel(int imageWidth, int imageHeight, int x, int y);
 	Color traceRay(Ray ray, int depth);
