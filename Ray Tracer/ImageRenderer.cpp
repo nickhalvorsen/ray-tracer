@@ -4,24 +4,47 @@
 #include "RayTracer.h"
 #include "Threader.h"
 
-ImageRenderer::ImageRenderer() 
-{
+#include <thread>
 
-}
-
-void ImageRenderer::renderPictureToFile(int imageWidth, int imageHeight, char* filename)
+void ImageRenderer::renderPictureToFile(RayTracer* rayTracer, int imageWidth, int imageHeight, char* filename)
 {
 	Bitmap bitmap(imageWidth, imageHeight);
-	RayTracer rayTracer;
+	Bitmap* bptr = &bitmap;
+	Threader threader(4);
 
-	for (int x = 0; x < imageWidth; x++)
+	bool useThreader = true;
+	if (useThreader)
 	{
-		for (int y = 0; y < imageHeight; y++)
+		for (int x = 0; x < imageWidth; x++)
 		{
-			Color thisColor = rayTracer.renderPixel(imageWidth, imageHeight, x, y);
-			bitmap.setPixel(x, y, thisColor);
+			for (int y = 0; y < imageHeight; y++)
+			{
+				std::thread t(renderPixel, rayTracer, bptr, imageWidth, imageHeight, x, y);
+				t.join();
+			}
 		}
-	}
 
-	bitmap.writeToFile(filename);
+		bitmap.writeToFile(filename);
+	}
+	else
+	{
+
+		/*for (int x = 0; x < imageWidth; x++)
+		{
+			for (int y = 0; y < imageHeight; y++)
+			{
+				Color thisColor = rayTracer.renderPixel(imageWidth, imageHeight, x, y);
+				bitmap.setPixel(x, y, thisColor);
+			}
+		}
+
+		bitmap.writeToFile(filename);
+*/
+	}
+}
+
+void ImageRenderer::renderPixel(RayTracer* rayTracer, Bitmap* bitmap, int imageWidth, int imageHeight, int x, int y)
+{
+	Color thisColor = rayTracer->renderPixel(imageWidth, imageHeight, x, y);
+	bitmap->setPixel(x, y, thisColor);
 }

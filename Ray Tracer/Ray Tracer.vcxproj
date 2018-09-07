@@ -158,6 +158,8 @@
     <ClInclude Include="LightSource.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="Quad.h" />
+    <ClInclude Include="RenderedImage.h" />
+    <ClInclude Include="Threader.h" />
     <ClInclude Include="Triangle.h" />
     <ClInclude Include="Ray.h" />
     <ClInclude Include="RayTracer.h" />
@@ -176,6 +178,8 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="Quad.cpp" />
+    <ClCompile Include="RenderedImage.cpp" />
+    <ClCompile Include="Threader.cpp" />
     <ClCompile Include="Triangle.cpp" />
     <ClCompile Include="Ray.cpp" />
     <ClCompile Include="RayTracer.cpp" />

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <Filter Include="Source Files">
@@ -69,8 +69,14 @@
     <ClInclude Include="LightSource.h">
       <Filter>Header Files\Scene Objects</Filter>
     </ClInclude>
+    <ClInclude Include="Threader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="ImageRenderer.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderedImage.h">
+      <Filter>Header Files\Image</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -113,8 +119,14 @@
     <ClCompile Include="LightSource.cpp">
       <Filter>Source Files\Scene Objects</Filter>
     </ClCompile>
+    <ClCompile Include="Threader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="ImageRenderer.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderedImage.cpp">
+      <Filter>Source Files\Image</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

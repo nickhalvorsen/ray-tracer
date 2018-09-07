@@ -24,6 +24,8 @@ Bitmap::Bitmap(int width, int height)
 	pixels = new unsigned char[arrayLength] { 0 };
 }
 
+Bitmap::Bitmap() : Bitmap(0, 0) { }
+
 Bitmap::~Bitmap()
 {
 	delete[] pixels;
