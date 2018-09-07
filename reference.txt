@@ -4,5 +4,4 @@ ray-sphere intersection algorithm: http://www.r-5.org/files/books/computers/algo
 ray-triangle intersection algorithm: https://www.scratchapixel.com/lessons/3d-basic-rendering/ray-tracing-rendering-a-triangle/ray-triangle-intersection-geometric-solution
 ray generation from camera: http://www.scratchapixel.com/lessons/3d-basic-rendering/ray-tracing-generating-camera-rays/generating-camera-rays?url=3d-basic-rendering/ray-tracing-generating-camera-rays/generating-camera-rays
 lighting: https://stackoverflow.com/questions/33054399/raytracing-lighting-equations
-
-	
+ray reflection: http://www.scratchapixel.com/code.php?id=8&origin=/lessons/3d-basic-rendering/ray-tracing-overview

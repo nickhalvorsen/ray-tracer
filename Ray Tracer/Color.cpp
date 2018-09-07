@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "Color.h"
+#include "MathUtility.h"
 #include <algorithm>
 
 Color::Color(int r, int g, int b)
@@ -48,8 +49,5 @@ Color Color::operator+=(Color other)
 
 int Color::validateRgb(int rgb)
 {
-	rgb = std::min(rgb, 255);
-	rgb = std::max(rgb, 0);
-
-	return rgb;
+	return MathUtility::clamp(rgb, 0, 255);
 }

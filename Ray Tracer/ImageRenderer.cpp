@@ -12,9 +12,9 @@ void ImageRenderer::renderPictureToFile(RayTracer* rayTracer, int imageWidth, in
 	Bitmap bitmap(imageWidth, imageHeight);
 	Bitmap* bptr = &bitmap;
 
-	ThreadPool pool(8);
+	ThreadPool pool(4);
 
-	bool useThreader = true;
+	bool useThreader = false;
 	if (useThreader)
 	{
 		for (int x = 0; x < imageWidth; x++)

@@ -156,6 +156,7 @@
     <ClInclude Include="Bitmap.h" />
     <ClInclude Include="ImageRenderer.h" />
     <ClInclude Include="LightSource.h" />
+    <ClInclude Include="MathUtility.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="Quad.h" />
     <ClInclude Include="ThreadPool.h" />
@@ -184,6 +185,7 @@
     <ClCompile Include="SceneObject.cpp" />
     <ClCompile Include="Segment3D.cpp" />
     <ClCompile Include="Sphere.cpp" />
+    <ClCompile Include="MathUtility.cpp" />
     <ClCompile Include="Vector3D.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

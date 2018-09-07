@@ -3,15 +3,16 @@
 #include <math.h>
 #include <algorithm>
 
-Sphere::Sphere(int id, Vector3D center, double radius, Color color)
+Sphere::Sphere(int id, Vector3D center, double radius, Color color, float reflectionIndex)
 {
 	this->id = id;
 	this->_center = center;
 	this->_radius = radius;
 	this->color = color;
+	setReflectionIndex(reflectionIndex);
 }
 
-Sphere::Sphere() : Sphere(0, Vector3D(0, 0, 0), 1, Color(0, 0, 0)) { }
+Sphere::Sphere() : Sphere(0, Vector3D(0, 0, 0), 1, Color(0, 0, 0), 0) { }
 
 bool Sphere::getClosestIntersection(Ray ray, Vector3D& intersectionPoint, double& intersectionDistance)
 {

@@ -4,6 +4,7 @@
 #include "Sphere.h"
 #include "Triangle.h"
 #include "Quad.h"
+#include "MathUtility.h"
 
 #define _USE_MATH_DEFINES
 #include <math.h>
@@ -15,12 +16,12 @@ const int RayTracer::_maxDepth = 1;
 
 RayTracer::RayTracer()
 {
-	_sceneObjects.push_back(std::shared_ptr<SceneObject>(new Sphere(1, Vector3D(-5, 5, -5), 1, Color(250, 200, 200))));
-	_sceneObjects.push_back(std::shared_ptr<SceneObject>(new Sphere(2, Vector3D(-5, 0, -5), 1, Color(250, 250, 200))));
-	_sceneObjects.push_back(std::shared_ptr<SceneObject>(new Sphere(3, Vector3D(-3, 1.5, -5), .2, Color(100, 250, 200))));
-	_sceneObjects.push_back(std::shared_ptr<SceneObject>(new Sphere(4, Vector3D(0, 0, -5), 1, Color(200, 250, 200))));
-	_sceneObjects.push_back(std::shared_ptr<SceneObject>(new Triangle(5, Vector3D(4, -1, -6), Vector3D(2, -2, -4), Vector3D(2, -1, -6), Color(200, 200, 250))));
-	_sceneObjects.push_back(std::shared_ptr<SceneObject>(new Quad(5, Vector3D(-5, -1, 5), Vector3D(-5, -1, -5), Vector3D(5, -1, -5), Vector3D(5, -1, 5), Color(200, 177, 12))));
+	_sceneObjects.push_back(std::shared_ptr<SceneObject>(new Sphere(1, Vector3D(-5, 5, -5), 1, Color(250, 200, 200), 0)));
+	_sceneObjects.push_back(std::shared_ptr<SceneObject>(new Sphere(2, Vector3D(-5, 0, -5), 1, Color(250, 250, 200), 0)));
+	_sceneObjects.push_back(std::shared_ptr<SceneObject>(new Sphere(3, Vector3D(-3, 1.5, -5), .2, Color(100, 250, 200), 0)));
+	_sceneObjects.push_back(std::shared_ptr<SceneObject>(new Sphere(4, Vector3D(0, 0, -5), 1, Color(200, 250, 200), .4)));
+	_sceneObjects.push_back(std::shared_ptr<SceneObject>(new Triangle(5, Vector3D(4, -1, -6), Vector3D(2, -2, -4), Vector3D(2, -1, -6), Color(200, 200, 250), 0)));
+	_sceneObjects.push_back(std::shared_ptr<SceneObject>(new Quad(5, Vector3D(-5, -1, 5), Vector3D(-5, -1, -5), Vector3D(5, -1, -5), Vector3D(5, -1, 5), Color(200, 177, 12), 0)));
 
 	_lightSources.push_back(LightSource(Vector3D(1, 5, -5), Color(255, 255, 255)));
 }
@@ -62,14 +63,26 @@ Color RayTracer::traceRay(Ray ray, int depth)
 		return colorAtThisPoint;
 	}
 
-	/*Ray reflected = getReflectedRay();
-	Color reflectedColor = rayTrace(reflected, depth + 1);
-	colorAtThisPoint = colorAtThisPoint.add(reflectedColor);
+	if (collidedObject->getReflectionIndex() > 0)
+	{
+		Ray reflected = getReflectedRay(ray, collidedObject, collisionPoint);
+		Color reflectedColor = traceRay(reflected, depth + 1);
 
+		float reflectedLightRatio = 1 - calculateReflectedLight(
+			ray.getDirection()
+			, collidedObject->getNormal(reflected.origin)
+			, collidedObject->getReflectionIndex());
+
+		Color objectColorPortion = (colorAtThisPoint * (1 - reflectedLightRatio));
+		Color reflectedColorPortion = (reflectedColor * (reflectedLightRatio));
+
+		colorAtThisPoint = objectColorPortion + reflectedColorPortion;
+	}
+	/*
 	Ray refracted = getRefractedRay();
 	Color refractedColor = rayTrace(refracted, depth + 1);
 	colorAtThisPoint = colorAtThisPoint.add(reflectedColor);
-*/
+	*/
 	return colorAtThisPoint;
 }
 
@@ -173,4 +186,36 @@ bool RayTracer::anyOtherObjectsIntersectSegment(Segment3D segment, std::shared_p
 	}
 
 	return false;
+}
+
+Ray RayTracer::getReflectedRay(Ray ray, const std::shared_ptr<SceneObject>& object, Vector3D objectCollisionPoint)
+{
+	Vector3D direction = ray.getDirection().normalized();
+	Vector3D normal = object->getNormal(objectCollisionPoint);
+	Vector3D reflectedDirection = direction - normal * (2 * direction.dot(normal));
+	Vector3D reflectionStartPoint = objectCollisionPoint + (reflectedDirection.normalized() * 0.0000001);
+	return Ray(reflectionStartPoint, reflectedDirection.normalized());
+}
+
+// aka "fresnel equation"
+float RayTracer::calculateReflectedLight(const Vector3D lightDirection, const Vector3D normalDirection, const float objectReflectionIndex)
+{
+	float cosi = MathUtility::clamp(-1, 1, lightDirection.dot(normalDirection));
+	float etai = 1, etat = objectReflectionIndex;
+	if (cosi > 0) { std::swap(etai, etat); }
+	// Compute sini using Snell's law
+	float sint = etai / etat * sqrtf(std::max(0.f, 1 - cosi * cosi));
+	// Total internal reflection
+	if (sint >= 1) {
+		return 1;
+	}
+	else {
+		float cost = sqrtf(std::max(0.f, 1 - sint * sint));
+		cosi = fabsf(cosi);
+		float Rs = ((etat * cosi) - (etai * cost)) / ((etat * cosi) + (etai * cost));
+		float Rp = ((etai * cosi) - (etat * cost)) / ((etai * cosi) + (etat * cost));
+		return (Rs * Rs + Rp * Rp) / 2;
+	}
+	// As a consequence of the conservation of energy, transmittance is given by:
+	// kt = 1 - kr;
 }

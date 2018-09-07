@@ -4,16 +4,17 @@
 #include <algorithm>
 
 
-Triangle::Triangle(int id, Vector3D point1, Vector3D point2, Vector3D point3, Color color)
+Triangle::Triangle(int id, Vector3D point1, Vector3D point2, Vector3D point3, Color color, float reflectionIndex)
 {
 	this->id = id;
 	this->_point1 = point1;
 	this->_point2 = point2;
 	this->_point3 = point3;
 	this->color = color;
+	setReflectionIndex(reflectionIndex);
 }
 
-Triangle::Triangle() : Triangle(-1, Vector3D(0, 0, 0), Vector3D(0, 0, 0), Vector3D(0, 0, 0), Color(0, 0, 0)) { }
+Triangle::Triangle() : Triangle(-1, Vector3D(0, 0, 0), Vector3D(0, 0, 0), Vector3D(0, 0, 0), Color(0, 0, 0), 0) { }
 
 bool Triangle::getClosestIntersection(Ray ray, Vector3D& intersectionPoint, double& intersectionDistance)
 {

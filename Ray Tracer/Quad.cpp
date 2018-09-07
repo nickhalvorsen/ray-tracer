@@ -2,13 +2,13 @@
 #include "Quad.h"
 
 
-Quad::Quad(int id, Vector3D point1, Vector3D point2, Vector3D point3, Vector3D point4, Color color)
+Quad::Quad(int id, Vector3D point1, Vector3D point2, Vector3D point3, Vector3D point4, Color color, float reflectionIndex)
 {
 	this->id = id;
 	this->color = color;
 
-	this->_t1 = Triangle(-1, point1, point2, point3, color);
-	this->_t2 = Triangle(-1, point2, point3, point4, color);
+	this->_t1 = Triangle(-1, point1, point2, point3, color, reflectionIndex);
+	this->_t2 = Triangle(-1, point2, point3, point4, color, reflectionIndex);
 }
 
 

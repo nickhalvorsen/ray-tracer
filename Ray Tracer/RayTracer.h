@@ -26,4 +26,6 @@ private:
 	Color getAllDiffuseLight(const std::shared_ptr<SceneObject>& object, Vector3D pointOnObject);
 	Color getDiffuseLight(const std::shared_ptr<SceneObject>& object, Vector3D pointOnObject, LightSource lightSource);
 	bool anyOtherObjectsIntersectSegment(Segment3D segment, std::shared_ptr<SceneObject> objectToExclude);
+	Ray getReflectedRay(Ray ray, const std::shared_ptr<SceneObject>& object, Vector3D objectCollisionPoint);
+	float calculateReflectedLight(const Vector3D lightDirection, const Vector3D normalDirection, const float objectReflectionIndex);
 };
