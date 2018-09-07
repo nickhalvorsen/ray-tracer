@@ -1,0 +1,1 @@
+thread pooling: https://stackoverflow.com/questions/26516683/reusing-thread-in-loop-c

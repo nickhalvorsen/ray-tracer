@@ -69,14 +69,14 @@
     <ClInclude Include="LightSource.h">
       <Filter>Header Files\Scene Objects</Filter>
     </ClInclude>
-    <ClInclude Include="Threader.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="ImageRenderer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="RenderedImage.h">
       <Filter>Header Files\Image</Filter>
+    </ClInclude>
+    <ClInclude Include="ThreadPool.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -119,14 +119,14 @@
     <ClCompile Include="LightSource.cpp">
       <Filter>Source Files\Scene Objects</Filter>
     </ClCompile>
-    <ClCompile Include="Threader.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="ImageRenderer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="RenderedImage.cpp">
       <Filter>Source Files\Image</Filter>
+    </ClCompile>
+    <ClCompile Include="ThreadPool.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
