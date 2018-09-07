@@ -4,17 +4,17 @@
 Ray::Ray(Vector3D origin, Vector3D direction)
 {
 	this->origin = origin;
-	this->direction = direction.normalized();
+	this->_direction = direction.normalized();
 }
 
 Ray::Ray() : Ray(Vector3D(), Vector3D()) { }
 
 Vector3D Ray::getDirection() 
 {
-	return direction;
+	return _direction;
 }
 
 Vector3D Ray::pointAlongRay(double distanceFromOrigin)
 {
-	return origin + direction * distanceFromOrigin;
+	return origin + _direction * distanceFromOrigin;
 }

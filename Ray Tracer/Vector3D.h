@@ -16,5 +16,4 @@ public:
 	Vector3D operator-(Vector3D other);
 	Vector3D operator*(double multiplyFactor);
 	bool operator==(Vector3D other);
-private:
 };

@@ -17,6 +17,6 @@ public:
 	bool getClosestIntersection(Ray ray, Vector3D& intersectionPoint, double& intersectionDistance);
 	Vector3D getNormal(Vector3D pointOnObject);
 private:
-	Triangle t1;
-	Triangle t2;
+	Triangle _t1;
+	Triangle _t2;
 };

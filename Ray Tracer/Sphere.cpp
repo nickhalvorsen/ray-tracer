@@ -6,19 +6,18 @@
 Sphere::Sphere(int id, Vector3D center, double radius, Color color)
 {
 	this->id = id;
-	this->center = center;
-	this->radius = radius;
+	this->_center = center;
+	this->_radius = radius;
 	this->color = color;
 }
 
 Sphere::Sphere() : Sphere(0, Vector3D(0, 0, 0), 1, Color(0, 0, 0)) { }
 
-// Algorithm reference: http://www.r-5.org/files/books/computers/algo-list/realtime-3d/Christer_Ericson-Real-Time_Collision_Detection-EN.pdf page 178
 bool Sphere::getClosestIntersection(Ray ray, Vector3D& intersectionPoint, double& intersectionDistance)
 {
-	Vector3D m = ray.origin - center;
+	Vector3D m = ray.origin - _center;
 	double b = m.dot(ray.getDirection());
-	double c = m.dot(m) - radius * radius;
+	double c = m.dot(m) - _radius * _radius;
 
 	if (c > 0.0 && b > 0.0)
 	{
@@ -51,5 +50,5 @@ bool Sphere::getClosestIntersection(Ray ray, Vector3D& intersectionPoint, double
 
 Vector3D Sphere::getNormal(Vector3D pointOnSurface)
 {
-	return (pointOnSurface - center).normalized();
+	return (pointOnSurface - _center).normalized();
 }

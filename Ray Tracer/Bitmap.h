@@ -15,14 +15,14 @@ public:
 	int getHeight();
 	void writeToFile(char* filename);
 private:
-	static int const bytesPerPixel;
-	static Color const defaultColor;
-	int width;
-	int height;
+	static int const _bytesPerPixel;
+	static Color const _defaultColor;
+	int _width;
+	int _height;
 	// Blue, green, and red values are stored for each pixel
 	// as consecutive unsigned chars (0-255) in the array.
 	// It is stored as BGR because that is how it's written to a bitmap file.
-	unsigned char* pixels;
+	unsigned char* _pixels;
 
 	bool validCoords(int x, int y);
 	int arrayIndexForCoords(int x, int y);

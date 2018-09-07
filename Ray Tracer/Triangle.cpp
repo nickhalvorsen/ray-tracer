@@ -7,20 +7,19 @@
 Triangle::Triangle(int id, Vector3D point1, Vector3D point2, Vector3D point3, Color color)
 {
 	this->id = id;
-	this->point1 = point1;
-	this->point2 = point2;
-	this->point3 = point3;
+	this->_point1 = point1;
+	this->_point2 = point2;
+	this->_point3 = point3;
 	this->color = color;
 }
 
 Triangle::Triangle() : Triangle(-1, Vector3D(0, 0, 0), Vector3D(0, 0, 0), Vector3D(0, 0, 0), Color(0, 0, 0)) { }
 
-// algorithm from: https://www.scratchapixel.com/lessons/3d-basic-rendering/ray-tracing-rendering-a-triangle/ray-triangle-intersection-geometric-solution
 bool Triangle::getClosestIntersection(Ray ray, Vector3D& intersectionPoint, double& intersectionDistance)
 {
-	Vector3D v0 = point1;
-	Vector3D v1 = point2;
-	Vector3D v2 = point3;
+	Vector3D v0 = _point1;
+	Vector3D v1 = _point2;
+	Vector3D v2 = _point3;
 
 	// compute plane's normal
 	Vector3D v0v1 = v1 - v0;
@@ -85,8 +84,8 @@ Vector3D Triangle::getNormal(Vector3D pointOnObject)
 	// The cross product of any two vectors on the plane
 	// will yield the normal vector.
 
-	Vector3D v1 = point3 - point2;
-	Vector3D v2 = point3 - point1;
+	Vector3D v1 = _point3 - _point2;
+	Vector3D v2 = _point3 - _point1;
 
 	
 	return v1.cross(v2).normalized();

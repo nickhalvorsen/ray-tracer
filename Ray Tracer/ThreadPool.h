@@ -14,9 +14,9 @@ public:
 	void waitUntilComplete();
 protected:
 	void threadEntry();
-	std::mutex lock;
-	std::condition_variable condVar;
-	bool shutdown;
-	std::queue <std::function <void(void)>> jobs;
-	std::vector <std::thread> threads;
+	std::mutex _lock;
+	std::condition_variable _condVar;
+	bool _shutdown;
+	std::queue <std::function <void(void)>> _jobs;
+	std::vector <std::thread> _threads;
 };

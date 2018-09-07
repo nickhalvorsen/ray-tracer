@@ -5,30 +5,29 @@
 #include <Windows.h>
 #include <fstream>
 
-const Color Bitmap::defaultColor = Color(0, 0, 0);
-const int Bitmap::bytesPerPixel = 3;
+const Color Bitmap::_defaultColor = Color(0, 0, 0);
+const int Bitmap::_bytesPerPixel = 3;
 
 Bitmap::Bitmap(int width, int height) 
 {
 	// todo: remove this and add padding to data array 
-	// https://stackoverflow.com/questions/29440672/bmp-file-line-padding-issue#29440863
-	if ((width * bytesPerPixel) % 4 != 0) {
+	if ((width * _bytesPerPixel) % 4 != 0) {
 		throw new std::exception("error: image row bytes must be multiple of 4: this is a restriction of the BMP file type"); 
 	}
 
-	this->width = width;
-	this->height = height;
+	this->_width = width;
+	this->_height = height;
 
-	int arrayLength = width*height*bytesPerPixel;
+	int arrayLength = width*height*_bytesPerPixel;
 
-	pixels = new unsigned char[arrayLength] { 0 };
+	_pixels = new unsigned char[arrayLength] { 0 };
 }
 
 Bitmap::Bitmap() : Bitmap(0, 0) { }
 
 Bitmap::~Bitmap()
 {
-	delete[] pixels;
+	delete[] _pixels;
 }
 
 void Bitmap::setPixel(int x, int y, Color color)
@@ -39,14 +38,14 @@ void Bitmap::setPixel(int x, int y, Color color)
 
 	int index = arrayIndexForCoords(x, y);
 
-	pixels[index] = color.b;
-	pixels[index + 1] = color.g;
-	pixels[index + 2] = color.r;
+	_pixels[index] = color.b;
+	_pixels[index + 1] = color.g;
+	_pixels[index + 2] = color.r;
 }
 
 bool Bitmap::validCoords(int x, int y) {
-	return x >= 0 && x < width
-		&& y >= 0 && y < height;
+	return x >= 0 && x < _width
+		&& y >= 0 && y < _height;
 }
 
 int Bitmap::arrayIndexForCoords(int x, int y) {
@@ -54,7 +53,7 @@ int Bitmap::arrayIndexForCoords(int x, int y) {
 		throw std::invalid_argument("given coordinates outside image bounds");
 	}
 
-	return y * width * bytesPerPixel + x * bytesPerPixel;
+	return y * _width * _bytesPerPixel + x * _bytesPerPixel;
 }
 
 Color Bitmap::getPixel(int x, int y)
@@ -66,21 +65,21 @@ Color Bitmap::getPixel(int x, int y)
 
 	int index = arrayIndexForCoords(x, y);
 
-	unsigned char b = pixels[index];
-	unsigned char g = pixels[index + 1];
-	unsigned char r = pixels[index + 2];
+	unsigned char b = _pixels[index];
+	unsigned char g = _pixels[index + 1];
+	unsigned char r = _pixels[index + 2];
 
 	return Color(r, g, b);
 }
 
 int Bitmap::getWidth()
 {
-	return width;
+	return _width;
 }
 
 int Bitmap::getHeight()
 {
-	return height;
+	return _height;
 }
 
 void Bitmap::writeToFile(char* filename)
@@ -105,18 +104,18 @@ void Bitmap::writeToFile(char* filename)
 	infoHeader.biPlanes = 1;
 	infoHeader.biBitCount = 24;	
 	infoHeader.biCompression = BI_RGB;
-	infoHeader.biSizeImage = width * abs(height) * bytesPerPixel;
+	infoHeader.biSizeImage = _width * abs(_height) * _bytesPerPixel;
 	infoHeader.biXPelsPerMeter = 0;
 	infoHeader.biYPelsPerMeter = 0;
 	infoHeader.biClrUsed = 0;
 	infoHeader.biClrImportant = 0;
-	infoHeader.biWidth = width;
+	infoHeader.biWidth = _width;
 	// bitmap is stored "upside down" on disk. we use -height to make it display right side up   
-	infoHeader.biHeight = -height;
+	infoHeader.biHeight = -_height;
 
 	fwrite(&fileHeader, 1, sizeof(BITMAPFILEHEADER), file);
 	fwrite(&infoHeader, 1, sizeof(BITMAPINFOHEADER), file);
-	fwrite(pixels, 1, infoHeader.biSizeImage, file);
+	fwrite(_pixels, 1, infoHeader.biSizeImage, file);
 
 	fclose(file);
 }

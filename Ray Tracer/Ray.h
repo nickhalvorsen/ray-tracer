@@ -11,5 +11,5 @@ public:
 	Vector3D getDirection();
 	Vector3D pointAlongRay(double distanceFromOrigin);
 private:
-	Vector3D direction;
+	Vector3D _direction;
 };

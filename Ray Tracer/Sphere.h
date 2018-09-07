@@ -18,6 +18,6 @@ public:
 	Vector3D getNormal(Vector3D pointOnObject);
 
 private:
-	Vector3D center;
-	double radius;
+	Vector3D _center;
+	double _radius;
 };

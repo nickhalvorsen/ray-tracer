@@ -2,7 +2,6 @@
 #include "ImageRenderer.h"
 #include "Bitmap.h"
 #include "RayTracer.h"
-#include "Threader.h"
 #include "ThreadPool.h"
 
 #include <thread>

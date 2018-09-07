@@ -1,1 +1,8 @@
 thread pooling: https://stackoverflow.com/questions/26516683/reusing-thread-in-loop-c
+bitmap file on disk structure: https://stackoverflow.com/questions/29440672/bmp-file-line-padding-issue#29440863
+ray-sphere intersection algorithm: http://www.r-5.org/files/books/computers/algo-list/realtime-3d/Christer_Ericson-Real-Time_Collision_Detection-EN.pdf page 178
+ray-triangle intersection algorithm: https://www.scratchapixel.com/lessons/3d-basic-rendering/ray-tracing-rendering-a-triangle/ray-triangle-intersection-geometric-solution
+ray generation from camera: http://www.scratchapixel.com/lessons/3d-basic-rendering/ray-tracing-generating-camera-rays/generating-camera-rays?url=3d-basic-rendering/ray-tracing-generating-camera-rays/generating-camera-rays
+lighting: https://stackoverflow.com/questions/33054399/raytracing-lighting-equations
+
+	

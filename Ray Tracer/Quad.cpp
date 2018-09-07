@@ -7,15 +7,15 @@ Quad::Quad(int id, Vector3D point1, Vector3D point2, Vector3D point3, Vector3D p
 	this->id = id;
 	this->color = color;
 
-	this->t1 = Triangle(-1, point1, point2, point3, color);
-	this->t2 = Triangle(-1, point2, point3, point4, color);
+	this->_t1 = Triangle(-1, point1, point2, point3, color);
+	this->_t2 = Triangle(-1, point2, point3, point4, color);
 }
 
 
 bool Quad::getClosestIntersection(Ray ray, Vector3D& intersectionPoint, double& intersectionDistance)
 {
-	if (t1.getClosestIntersection(ray, intersectionPoint, intersectionDistance)
-		|| t2.getClosestIntersection(ray, intersectionPoint, intersectionDistance))
+	if (_t1.getClosestIntersection(ray, intersectionPoint, intersectionDistance)
+		|| _t2.getClosestIntersection(ray, intersectionPoint, intersectionDistance))
 	{
 		return true;
 	}
@@ -27,5 +27,5 @@ Vector3D Quad::getNormal(Vector3D pointOnObject)
 {
 	// here we assume the quad is on a single plane
 	// so we just get the normal of the first triangle.
-	return t1.getNormal(pointOnObject);
+	return _t1.getNormal(pointOnObject);
 }
