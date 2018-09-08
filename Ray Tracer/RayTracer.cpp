@@ -11,7 +11,7 @@
 #include <algorithm>
 #include <memory>
 
-const Color RayTracer::_backgroundColor = Color(1, 1, 1);
+const Color RayTracer::_backgroundColor = Color(160, 210, 250);
 
 RayTracer::RayTracer(int antiAliasingFactor, int maxDepth, std::vector<SceneObject*> sceneObjects, std::vector<LightSource> lightSources)
 {
