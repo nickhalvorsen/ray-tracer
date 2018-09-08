@@ -7,16 +7,21 @@
 #include <thread>
 #include <future>
 
+ImageRenderer::ImageRenderer(int threadCount)
+{
+	_threadCount = threadCount;
+}
+
 void ImageRenderer::renderPictureToFile(RayTracer* rayTracer, int imageWidth, int imageHeight, char* filename)
 {
 	Bitmap bitmap(imageWidth, imageHeight);
 	Bitmap* bptr = &bitmap;
 
-	ThreadPool pool(4);
-
-	bool useThreader = false;
+	bool useThreader = _threadCount > 0;
 	if (useThreader)
 	{
+		ThreadPool pool(_threadCount);
+
 		for (int x = 0; x < imageWidth; x++)
 		{
 			for (int y = 0; y < imageHeight; y++)

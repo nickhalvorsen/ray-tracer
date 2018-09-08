@@ -11,13 +11,14 @@
 #include <algorithm>
 #include <memory>
 
-RayTracer::RayTracer() : RayTracer(0, 2, Color(0, 0, 0)) { }
+const Color RayTracer::_backgroundColor = Color(1, 1, 1);
 
-RayTracer::RayTracer(int antiAliasingFactor, int maxDepth, Color backgroundColor)
+RayTracer::RayTracer() : RayTracer(0, 2) { }
+
+RayTracer::RayTracer(int antiAliasingFactor, int maxDepth)
 {
 	_antiAliasingFactor = antiAliasingFactor;
 	_maxDepth = maxDepth;
-	_backgroundColor = backgroundColor;
 
 	_sceneObjects.push_back(std::shared_ptr<SceneObject>(new Sphere(1, Vector3D(-5, 5, -5), 1, Color(250, 200, 200), 0)));
 	_sceneObjects.push_back(std::shared_ptr<SceneObject>(new Sphere(2, Vector3D(-5, 0, -5), 1, Color(250, 250, 200), 0)));

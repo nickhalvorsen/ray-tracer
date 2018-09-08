@@ -12,10 +12,10 @@ class RayTracer
 {
 public:
 	RayTracer();
-	RayTracer(int antiAliasingFactor, int maxDepth, Color backgroundColor);
+	RayTracer(int antiAliasingFactor, int maxDepth);
 	Color renderPixel(int imageWidth, int imageHeight, int x, int y);
 private:
-	Color _backgroundColor;
+	static const Color _backgroundColor;
 	int _maxDepth;
 	int _antiAliasingFactor;
 	std::vector< std::shared_ptr<SceneObject> > _sceneObjects;
