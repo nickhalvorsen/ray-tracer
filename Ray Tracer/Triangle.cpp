@@ -69,8 +69,6 @@ bool Triangle::getClosestIntersection(Ray ray, Vector3D& intersectionPoint, doub
 	C = edge2.cross(vp2);
 	if (N.dot(C) < 0) return false; // P is on the right side;
 
-	return true; // this ray hits the triangle 
-
 	intersectionPoint = P;
 	intersectionDistance = (intersectionPoint - ray.origin).getLength();
 	if (intersectionDistance < 0)
