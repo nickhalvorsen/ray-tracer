@@ -13,21 +13,14 @@
 
 const Color RayTracer::_backgroundColor = Color(1, 1, 1);
 
-RayTracer::RayTracer() : RayTracer(0, 2) { }
+//RayTracer::RayTracer() : RayTracer(0, 2) { }
 
-RayTracer::RayTracer(int antiAliasingFactor, int maxDepth)
+RayTracer::RayTracer(int antiAliasingFactor, int maxDepth, std::vector< std::shared_ptr<SceneObject> > sceneObjects, std::vector<LightSource> lightSources)
 {
 	_antiAliasingFactor = antiAliasingFactor;
 	_maxDepth = maxDepth;
-
-	_sceneObjects.push_back(std::shared_ptr<SceneObject>(new Sphere(1, Vector3D(-5, 5, -5), 1, Color(250, 200, 200), 0)));
-	_sceneObjects.push_back(std::shared_ptr<SceneObject>(new Sphere(2, Vector3D(-5, 0, -5), 1, Color(250, 250, 200), 0)));
-	_sceneObjects.push_back(std::shared_ptr<SceneObject>(new Sphere(3, Vector3D(-3, 1.5, -5), .2, Color(100, 250, 200), 0)));
-	_sceneObjects.push_back(std::shared_ptr<SceneObject>(new Sphere(4, Vector3D(0, 0, -5), 1, Color(255, 255, 255), .4)));
-	_sceneObjects.push_back(std::shared_ptr<SceneObject>(new Triangle(5, Vector3D(4, -1, -6), Vector3D(2, -2, -4), Vector3D(2, -1, -6), Color(200, 200, 250), 0)));
-	_sceneObjects.push_back(std::shared_ptr<SceneObject>(new Quad(5, Vector3D(-5, -1, 5), Vector3D(-5, -1, -5), Vector3D(5, -1, -5), Vector3D(5, -1, 5), Color(200, 177, 12), 0)));
-
-	_lightSources.push_back(LightSource(Vector3D(1, 5, -5), Color(255, 255, 255)));
+	_sceneObjects = sceneObjects;
+	_lightSources = lightSources;
 }
 
 Color RayTracer::renderPixel(int imageWidth, int imageHeight, int x, int y)
