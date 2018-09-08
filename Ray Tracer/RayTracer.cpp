@@ -11,15 +11,18 @@
 #include <algorithm>
 #include <memory>
 
-const Color RayTracer::_backgroundColor = Color(2, 2, 2);
-const int RayTracer::_maxDepth = 1;
+RayTracer::RayTracer() : RayTracer(0, 2, Color(0, 0, 0)) { }
 
-RayTracer::RayTracer()
+RayTracer::RayTracer(int antiAliasingFactor, int maxDepth, Color backgroundColor)
 {
+	_antiAliasingFactor = antiAliasingFactor;
+	_maxDepth = maxDepth;
+	_backgroundColor = backgroundColor;
+
 	_sceneObjects.push_back(std::shared_ptr<SceneObject>(new Sphere(1, Vector3D(-5, 5, -5), 1, Color(250, 200, 200), 0)));
 	_sceneObjects.push_back(std::shared_ptr<SceneObject>(new Sphere(2, Vector3D(-5, 0, -5), 1, Color(250, 250, 200), 0)));
 	_sceneObjects.push_back(std::shared_ptr<SceneObject>(new Sphere(3, Vector3D(-3, 1.5, -5), .2, Color(100, 250, 200), 0)));
-	_sceneObjects.push_back(std::shared_ptr<SceneObject>(new Sphere(4, Vector3D(0, 0, -5), 1, Color(200, 250, 200), .4)));
+	_sceneObjects.push_back(std::shared_ptr<SceneObject>(new Sphere(4, Vector3D(0, 0, -5), 1, Color(255, 255, 255), .4)));
 	_sceneObjects.push_back(std::shared_ptr<SceneObject>(new Triangle(5, Vector3D(4, -1, -6), Vector3D(2, -2, -4), Vector3D(2, -1, -6), Color(200, 200, 250), 0)));
 	_sceneObjects.push_back(std::shared_ptr<SceneObject>(new Quad(5, Vector3D(-5, -1, 5), Vector3D(-5, -1, -5), Vector3D(5, -1, -5), Vector3D(5, -1, 5), Color(200, 177, 12), 0)));
 
@@ -28,8 +31,53 @@ RayTracer::RayTracer()
 
 Color RayTracer::renderPixel(int imageWidth, int imageHeight, int x, int y)
 {
+	if (_antiAliasingFactor > 1)
+	{
+		return renderPixelWithAntiAliasing(imageWidth, imageHeight, x, y);
+	}
+
 	Ray ray = getRayForPixel(imageWidth, imageHeight, x, y);
 	return traceRay(ray, 0);
+}
+
+Color RayTracer::renderPixelWithAntiAliasing(int imageWidth, int imageHeight, int x, int y) 
+{
+	std::vector<Color> samples;
+
+	// get the anti-aliasing ray by pretending the image has more pixels
+	int extraPixelsPerPixel = _antiAliasingFactor * _antiAliasingFactor;
+	for (int i = 0; i < extraPixelsPerPixel; i++)
+	{
+		int testWidth = imageWidth * _antiAliasingFactor;
+		int testHeight = imageHeight * _antiAliasingFactor;
+		int testX = x * _antiAliasingFactor + (i %_antiAliasingFactor);
+		int testY = y * _antiAliasingFactor + i / _antiAliasingFactor;
+		Ray ray = getRayForPixel(testWidth, testHeight, testX, testY);
+		samples.push_back(traceRay(ray, 0));
+	}
+
+	return averageColor(samples);
+}
+
+Color RayTracer::averageColor(const std::vector<Color>& samples)
+{
+	int totalR = 0;
+	int totalG = 0;
+	int totalB = 0;
+
+	for (int i = 0; i < samples.size(); i++)
+	{
+		totalR += samples[i].r;
+		totalG += samples[i].g;
+		totalB += samples[i].b;
+	}
+
+	// We can assume that there is at least 1 sample per pixel. 
+	float averageR = totalR / samples.size();
+	float averageG = totalG / samples.size();
+	float averageB = totalB / samples.size();
+
+	return Color(averageR, averageG, averageB);
 }
 
 Ray RayTracer::getRayForPixel(int imageWidth, int imageHeight, int x, int y)
