@@ -6,6 +6,7 @@ Quad::Quad(int id, Vector3D point1, Vector3D point2, Vector3D point3, Vector3D p
 {
 	this->id = id;
 	this->color = color;
+	this->setReflectionIndex(reflectionIndex);
 
 	this->_t1 = Triangle(-1, point1, point2, point3, color, reflectionIndex);
 	this->_t2 = Triangle(-1, point1, point3, point4, color, reflectionIndex);
