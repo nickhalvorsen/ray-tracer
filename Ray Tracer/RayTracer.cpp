@@ -13,9 +13,7 @@
 
 const Color RayTracer::_backgroundColor = Color(1, 1, 1);
 
-//RayTracer::RayTracer() : RayTracer(0, 2) { }
-
-RayTracer::RayTracer(int antiAliasingFactor, int maxDepth, std::vector< std::shared_ptr<SceneObject> > sceneObjects, std::vector<LightSource> lightSources)
+RayTracer::RayTracer(int antiAliasingFactor, int maxDepth, std::vector<SceneObject*> sceneObjects, std::vector<LightSource> lightSources)
 {
 	_antiAliasingFactor = antiAliasingFactor;
 	_maxDepth = maxDepth;
@@ -91,7 +89,7 @@ Color RayTracer::traceRay(Ray ray, int depth)
 {
 	Vector3D collisionPoint;
 
-	std::shared_ptr<SceneObject> collidedObject = getClosestIntersection(ray, collisionPoint);
+	SceneObject* collidedObject = getClosestIntersection(ray, collisionPoint);
 
 	if (collidedObject == nullptr)
 	{
@@ -128,10 +126,10 @@ Color RayTracer::traceRay(Ray ray, int depth)
 	return colorAtThisPoint;
 }
 
-std::shared_ptr<SceneObject> RayTracer::getClosestIntersection(Ray ray, Vector3D& intersectionPoint)
+SceneObject* RayTracer::getClosestIntersection(Ray ray, Vector3D& intersectionPoint)
 {
 	double closestIntersection = 1000000000;
-	std::shared_ptr<SceneObject> intersectedObject = nullptr;
+	SceneObject* intersectedObject = nullptr;
 
 	for (int i = 0; i < _sceneObjects.size(); i++)
 	{
@@ -150,7 +148,7 @@ std::shared_ptr<SceneObject> RayTracer::getClosestIntersection(Ray ray, Vector3D
 	return intersectedObject;
 }
 
-Color RayTracer::getColorWithLight(const std::shared_ptr<SceneObject>& object, Vector3D pointOnObject)
+Color RayTracer::getColorWithLight(SceneObject* object, Vector3D pointOnObject)
 {
 	bool enableAmbientLight = true;
 	bool enableDiffuseLight = true;
@@ -172,13 +170,13 @@ Color RayTracer::getColorWithLight(const std::shared_ptr<SceneObject>& object, V
 	return colorAtPoint;
 }
 
-Color RayTracer::getAmbientLight(const std::shared_ptr<SceneObject>& object)
+Color RayTracer::getAmbientLight(SceneObject* object)
 {
 	return object->color;
 }
 
 // Diffuse lighting (aka "lambertian")
-Color RayTracer::getAllDiffuseLight(const std::shared_ptr<SceneObject>& object, Vector3D pointOnObject)
+Color RayTracer::getAllDiffuseLight(SceneObject* object, Vector3D pointOnObject)
 {
 	Color colorAtPoint(0, 0, 0);
 
@@ -190,7 +188,7 @@ Color RayTracer::getAllDiffuseLight(const std::shared_ptr<SceneObject>& object, 
 	return colorAtPoint;
 }
 
-Color RayTracer::getDiffuseLight(const std::shared_ptr<SceneObject>& object, Vector3D pointOnObject, LightSource lightSource)
+Color RayTracer::getDiffuseLight(SceneObject* object, Vector3D pointOnObject, LightSource lightSource)
 {
 	Vector3D normal = object->getNormal(pointOnObject);
 	Vector3D pointToLight = (_lightSources[0].point - pointOnObject).normalized();
@@ -212,9 +210,9 @@ Color RayTracer::getDiffuseLight(const std::shared_ptr<SceneObject>& object, Vec
 	Color(r, g, b);
 }
 
-bool RayTracer::anyOtherObjectsIntersectSegment(Segment3D segment, std::shared_ptr<SceneObject> objectToExclude)
+bool RayTracer::anyOtherObjectsIntersectSegment(Segment3D segment, SceneObject* objectToExclude)
 {
-	for (std::shared_ptr<SceneObject> sceneObject : _sceneObjects)
+	for (auto & sceneObject : _sceneObjects)
 	{
 		if (sceneObject->getId() == objectToExclude->getId()) 
 		{
@@ -230,7 +228,7 @@ bool RayTracer::anyOtherObjectsIntersectSegment(Segment3D segment, std::shared_p
 	return false;
 }
 
-Ray RayTracer::getReflectedRay(Ray ray, const std::shared_ptr<SceneObject>& object, Vector3D objectCollisionPoint)
+Ray RayTracer::getReflectedRay(Ray ray, SceneObject* object, Vector3D objectCollisionPoint)
 {
 	Vector3D direction = ray.getDirection().normalized();
 	Vector3D normal = object->getNormal(objectCollisionPoint);
