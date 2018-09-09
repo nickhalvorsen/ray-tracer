@@ -109,24 +109,21 @@ Color RayTracer::traceRay(Ray ray, int depth)
 
 	if (collidedObject->getReflectionIndex() > 0)
 	{
-		Ray reflected = getReflectedRay(ray, collidedObject, collisionPoint);
-		Color reflectedColor = traceRay(reflected, depth + 1);
-
-		float reflectedLightRatio = 1 - calculateReflectedLight(
-			ray.getDirection()
-			, collidedObject->getNormal(reflected.origin)
-			, collidedObject->getReflectionIndex());
+		float reflectedLightRatio;
+		Color reflectedColor = getReflectedColor(ray, collidedObject, collisionPoint, depth, reflectedLightRatio);
 
 		Color objectColorPortion = (colorAtThisPoint * (1 - reflectedLightRatio));
 		Color reflectedColorPortion = (reflectedColor * (reflectedLightRatio));
 
 		colorAtThisPoint = objectColorPortion + reflectedColorPortion;
 	}
+
 	/*
 	Ray refracted = getRefractedRay();
 	Color refractedColor = rayTrace(refracted, depth + 1);
 	colorAtThisPoint = colorAtThisPoint.add(reflectedColor);
 	*/
+
 	return colorAtThisPoint;
 }
 
@@ -152,7 +149,7 @@ SceneObject* RayTracer::getClosestIntersection(Ray ray, Vector3D& intersectionPo
 	return intersectedObject;
 }
 
-Color RayTracer::getColorWithLight(SceneObject* object, Vector3D pointOnObject)
+Color RayTracer::getColorWithLight(SceneObject* object, const Vector3D& pointOnObject)
 {
 	Color colorAtPoint(0, 0, 0);
 
@@ -171,7 +168,7 @@ Color RayTracer::getAmbientLight(SceneObject* object)
 }
 
 // Diffuse lighting (aka "lambertian")
-Color RayTracer::getAllDiffuseLight(SceneObject* object, Vector3D pointOnObject)
+Color RayTracer::getAllDiffuseLight(SceneObject* object, const Vector3D& pointOnObject)
 {
 	Color colorAtPoint(0, 0, 0);
 
@@ -183,7 +180,7 @@ Color RayTracer::getAllDiffuseLight(SceneObject* object, Vector3D pointOnObject)
 	return colorAtPoint;
 }
 
-Color RayTracer::getDiffuseLight(SceneObject* object, Vector3D pointOnObject, LightSource lightSource)
+Color RayTracer::getDiffuseLight(SceneObject* object, const Vector3D& pointOnObject, const LightSource& lightSource)
 {
 	Vector3D normal = object->getNormal(pointOnObject);
 	Vector3D pointToLight = (_lightSources[0].point - pointOnObject).normalized();
@@ -223,6 +220,19 @@ bool RayTracer::anyOtherObjectsIntersectSegment(Segment3D segment, SceneObject* 
 	return false;
 }
 
+Color RayTracer::getReflectedColor(Ray ray, SceneObject* collidedObject, const Vector3D& collisionPoint, int depth, float& reflectedLightRatio)
+{
+	Ray reflected = getReflectedRay(ray, collidedObject, collisionPoint);
+	Color reflectedColor = traceRay(reflected, depth + 1);
+
+	reflectedLightRatio = 1 - calculateReflectedLight(
+		ray.getDirection()
+		, collidedObject->getNormal(reflected.origin)
+		, collidedObject->getReflectionIndex());
+
+	return reflectedColor;
+}
+
 Ray RayTracer::getReflectedRay(Ray ray, SceneObject* object, Vector3D objectCollisionPoint)
 {
 	Vector3D direction = ray.getDirection().normalized();
@@ -233,7 +243,7 @@ Ray RayTracer::getReflectedRay(Ray ray, SceneObject* object, Vector3D objectColl
 }
 
 // aka "fresnel equation"
-float RayTracer::calculateReflectedLight(const Vector3D lightDirection, const Vector3D normalDirection, const float objectReflectionIndex)
+float RayTracer::calculateReflectedLight(const Vector3D& lightDirection, const Vector3D& normalDirection, const float objectReflectionIndex)
 {
 	float cosi = MathUtility::clamp(-1, 1, lightDirection.dot(normalDirection));
 	float etai = 1, etat = objectReflectionIndex;

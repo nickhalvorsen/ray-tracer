@@ -23,12 +23,13 @@ private:
 	Ray getRayForPixel(int imageWidth, int imageHeight, int x, int y);
 	Color traceRay(Ray ray, int depth);
 	SceneObject* getClosestIntersection(Ray ray, Vector3D& collisionPoint);
-	Color getColorWithLight(SceneObject* object, Vector3D pointOnObject);
+	Color getColorWithLight(SceneObject* object, const Vector3D& pointOnObject);
 	Color getAmbientLight(SceneObject* object);
-	Color getAllDiffuseLight(SceneObject* object, Vector3D pointOnObject);
-	Color getDiffuseLight(SceneObject* object, Vector3D pointOnObject, LightSource lightSource);
+	Color getAllDiffuseLight(SceneObject* object, const Vector3D& pointOnObject);
+	Color getDiffuseLight(SceneObject* object, const Vector3D& pointOnObject, const LightSource& lightSource);
 	bool anyOtherObjectsIntersectSegment(Segment3D segment, SceneObject* objectToExclude);
+	Color getReflectedColor(Ray ray, SceneObject* collidedObject, const Vector3D& collisionPoint, int depth, float& reflectedLightRatio);
 	Ray getReflectedRay(Ray ray, SceneObject* object, Vector3D objectCollisionPoint);
-	float calculateReflectedLight(const Vector3D lightDirection, const Vector3D normalDirection, const float objectReflectionIndex);
+	float calculateReflectedLight(const Vector3D& lightDirection, const Vector3D& normalDirection, const float objectReflectionIndex);
 	Color averageColor(const std::vector<Color>& samples);
 };
