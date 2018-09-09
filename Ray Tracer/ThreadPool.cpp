@@ -6,12 +6,17 @@
 #include <chrono>
 #include "ThreadPool.h"
 
+using std::bind;
+using std::mutex;
+using std::function;
+using std::unique_lock;
+
 ThreadPool::ThreadPool(int maxThreads) : _shutdown(false)
 {
 	// Create the specified number of threads
 	_threads.reserve(maxThreads);
 	for (int i = 0; i < maxThreads; ++i)
-		_threads.emplace_back(std::bind(&ThreadPool::threadEntry, this));
+		_threads.emplace_back(bind(&ThreadPool::threadEntry, this));
 }
 
 ThreadPool::~ThreadPool()
@@ -23,7 +28,7 @@ void ThreadPool::waitUntilComplete()
 {
 	{
 		// Unblock all threads and tell them to stop
-		std::unique_lock <std::mutex> l(_lock);
+		unique_lock <mutex> l(_lock);
 
 		_shutdown = true;
 		_condVar.notify_all();
@@ -39,23 +44,23 @@ void ThreadPool::waitUntilComplete()
 	}
 }
 
-void ThreadPool::addJobToQueue(std::function <void(void)> job)
+void ThreadPool::addJobToQueue(function <void(void)> job)
 {
-	std::unique_lock <std::mutex> l(_lock);
+	unique_lock <mutex> l(_lock);
 
-	_jobs.emplace(std::move(job));
+	_jobs.emplace(move(job));
 	_condVar.notify_one();
 }
 
 
 void ThreadPool::threadEntry()
 {
-	std::function <void(void)> job;
+	function <void(void)> job;
 
 	while (true)
 	{
 		{
-			std::unique_lock <std::mutex> l(_lock);
+			unique_lock <mutex> l(_lock);
 
 			while (!_shutdown && _jobs.empty())
 				_condVar.wait(l);
@@ -65,7 +70,7 @@ void ThreadPool::threadEntry()
 				return;
 			}
 
-			job = std::move(_jobs.front());
+			job = move(_jobs.front());
 			_jobs.pop();
 		}
 
