@@ -3,6 +3,8 @@
 #include <math.h>
 #include <algorithm>
 
+using std::max;
+
 Sphere::Sphere(int id, Vector3D center, double radius, Color color, float reflectionIndex)
 {
 	this->id = id;
@@ -43,7 +45,7 @@ bool Sphere::getClosestIntersection(Ray ray, Vector3D& intersectionPoint, double
 	double distance = -b - sqrt(discr);
 
 	// If t is negative, ray started inside sphere so clamp t to zero
-	intersectionDistance = std::max(distance, 0.0);
+	intersectionDistance = max(distance, 0.0);
 	intersectionPoint = ray.pointAlongRay(intersectionDistance);
 
 	return true;

@@ -11,9 +11,13 @@
 #include <algorithm>
 #include <memory>
 
+using std::vector;
+using std::swap;
+using std::max;
+
 const Color RayTracer::_backgroundColor = Color(160, 210, 250);
 
-RayTracer::RayTracer(int antiAliasingFactor, int maxDepth, std::vector<SceneObject*> sceneObjects, std::vector<LightSource> lightSources)
+RayTracer::RayTracer(int antiAliasingFactor, int maxDepth, vector<SceneObject*> sceneObjects, vector<LightSource> lightSources)
 {
 	_antiAliasingFactor = antiAliasingFactor;
 	_maxDepth = maxDepth;
@@ -34,7 +38,7 @@ Color RayTracer::renderPixel(int imageWidth, int imageHeight, int x, int y)
 
 Color RayTracer::renderPixelWithAntiAliasing(int imageWidth, int imageHeight, int x, int y) 
 {
-	std::vector<Color> samples;
+	vector<Color> samples;
 
 	// get the anti-aliasing ray by pretending the image has more pixels
 	int extraPixelsPerPixel = _antiAliasingFactor * _antiAliasingFactor;
@@ -51,7 +55,7 @@ Color RayTracer::renderPixelWithAntiAliasing(int imageWidth, int imageHeight, in
 	return averageColor(samples);
 }
 
-Color RayTracer::averageColor(const std::vector<Color>& samples)
+Color RayTracer::averageColor(const vector<Color>& samples)
 {
 	int totalR = 0;
 	int totalG = 0;
@@ -150,22 +154,13 @@ SceneObject* RayTracer::getClosestIntersection(Ray ray, Vector3D& intersectionPo
 
 Color RayTracer::getColorWithLight(SceneObject* object, Vector3D pointOnObject)
 {
-	bool enableAmbientLight = true;
-	bool enableDiffuseLight = true;
-
 	Color colorAtPoint(0, 0, 0);
 
-	if (enableAmbientLight)
-	{
-		double ambientCoefficient = 0.1;
-		colorAtPoint += getAmbientLight(object) * ambientCoefficient;
-	}
+	double ambientCoefficient = 0.1;
+	colorAtPoint += getAmbientLight(object) * ambientCoefficient;
 
-	if (enableDiffuseLight)
-	{
-		double diffuseCoefficient = 1;
-		colorAtPoint += getAllDiffuseLight(object, pointOnObject) * diffuseCoefficient;
-	}
+	double diffuseCoefficient = 1;
+	colorAtPoint += getAllDiffuseLight(object, pointOnObject) * diffuseCoefficient;
 
 	return colorAtPoint;
 }
@@ -200,8 +195,8 @@ Color RayTracer::getDiffuseLight(SceneObject* object, Vector3D pointOnObject, Li
 		return Color(0, 0, 0);
 	}
 
-	double val = std::max(normal.dot(pointToLight), 0.0);
-	// todo: change intensity based on distance
+	double val = max(normal.dot(pointToLight), 0.0);
+	// In the future the light intensity could be based on distance from the light source.
 
 	int r = object->color.r * val * (lightSource.intensity.r / 255.0);
 	int g = object->color.g * val * (lightSource.intensity.g / 255.0);
@@ -242,15 +237,15 @@ float RayTracer::calculateReflectedLight(const Vector3D lightDirection, const Ve
 {
 	float cosi = MathUtility::clamp(-1, 1, lightDirection.dot(normalDirection));
 	float etai = 1, etat = objectReflectionIndex;
-	if (cosi > 0) { std::swap(etai, etat); }
+	if (cosi > 0) { swap(etai, etat); }
 	// Compute sini using Snell's law
-	float sint = etai / etat * sqrtf(std::max(0.f, 1 - cosi * cosi));
+	float sint = etai / etat * sqrtf(max(0.f, 1 - cosi * cosi));
 	// Total internal reflection
 	if (sint >= 1) {
 		return 1;
 	}
 	else {
-		float cost = sqrtf(std::max(0.f, 1 - sint * sint));
+		float cost = sqrtf(max(0.f, 1 - sint * sint));
 		cosi = fabsf(cosi);
 		float Rs = ((etat * cosi) - (etai * cost)) / ((etat * cosi) + (etai * cost));
 		float Rp = ((etai * cosi) - (etat * cost)) / ((etai * cosi) + (etat * cost));

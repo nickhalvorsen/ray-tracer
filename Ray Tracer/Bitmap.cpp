@@ -5,6 +5,10 @@
 #include <Windows.h>
 #include <fstream>
 
+using std::string;
+using std::exception;
+using std::invalid_argument;
+
 const Color Bitmap::_defaultColor = Color(0, 0, 0);
 const int Bitmap::_bytesPerPixel = 3;
 
@@ -12,7 +16,7 @@ Bitmap::Bitmap(int width, int height)
 {
 	// todo: remove this and add padding to data array 
 	if ((width * _bytesPerPixel) % 4 != 0) {
-		throw new std::exception("error: image row bytes must be multiple of 4: this is a restriction of the BMP file type"); 
+		throw new exception("error: image row bytes must be multiple of 4: this is a restriction of the BMP file type"); 
 	}
 
 	this->_width = width;
@@ -33,7 +37,7 @@ Bitmap::~Bitmap()
 void Bitmap::setPixel(int x, int y, Color color)
 {
 	if (!validCoords(x, y)) {
-		throw std::invalid_argument("given coordinates outside image bounds");
+		throw invalid_argument("given coordinates outside image bounds");
 	}
 
 	int index = arrayIndexForCoords(x, y);
@@ -43,14 +47,17 @@ void Bitmap::setPixel(int x, int y, Color color)
 	_pixels[index + 2] = color.r;
 }
 
-bool Bitmap::validCoords(int x, int y) {
+bool Bitmap::validCoords(int x, int y) 
+{
 	return x >= 0 && x < _width
 		&& y >= 0 && y < _height;
 }
 
-int Bitmap::arrayIndexForCoords(int x, int y) {
-	if (!validCoords(x, y)) {
-		throw std::invalid_argument("given coordinates outside image bounds");
+int Bitmap::arrayIndexForCoords(int x, int y) 
+{
+	if (!validCoords(x, y)) 
+	{
+		throw invalid_argument("given coordinates outside image bounds");
 	}
 
 	return y * _width * _bytesPerPixel + x * _bytesPerPixel;
@@ -60,7 +67,7 @@ Color Bitmap::getPixel(int x, int y)
 {
 	if (!validCoords(x, y))
 	{
-		throw std::invalid_argument("given coordinates outside image bounds");
+		throw invalid_argument("given coordinates outside image bounds");
 	}
 
 	int index = arrayIndexForCoords(x, y);
@@ -82,13 +89,13 @@ int Bitmap::getHeight()
 	return _height;
 }
 
-void Bitmap::writeToFile(char* filename)
+void Bitmap::writeToFile(string filename)
 {
 	FILE *file;
-	errno_t err = fopen_s(&file, filename, "wb");
+	errno_t err = fopen_s(&file, filename.c_str(), "wb");
 
 	if (!file) {
-		throw std::exception("error opening file for write");
+		throw exception("error opening file for write");
 	}
 
 	BITMAPFILEHEADER fileHeader;

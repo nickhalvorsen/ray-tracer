@@ -13,7 +13,7 @@ public:
 	Color getPixel(int x, int y);
 	int getWidth();
 	int getHeight();
-	void writeToFile(char* filename);
+	void writeToFile(std::string filename);
 private:
 	static int const _bytesPerPixel;
 	static Color const _defaultColor;

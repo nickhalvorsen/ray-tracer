@@ -7,12 +7,14 @@
 #include <thread>
 #include <future>
 
+using std::string;
+
 ImageRenderer::ImageRenderer(int threadCount)
 {
 	_threadCount = threadCount;
 }
 
-void ImageRenderer::renderPictureToFile(RayTracer* rayTracer, int imageWidth, int imageHeight, char* filename)
+void ImageRenderer::renderPictureToFile(RayTracer* rayTracer, int imageWidth, int imageHeight, string filename)
 {
 	Bitmap bitmap(imageWidth, imageHeight);
 	Bitmap* bptr = &bitmap;

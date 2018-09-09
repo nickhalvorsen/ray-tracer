@@ -5,8 +5,9 @@
 
 #include <algorithm>
 
+using std::max;
 
 float MathUtility::clamp(float number, float lowBound, float highBound)
 {
-	return std::max(lowBound, std::min(number, highBound));
+	return max(lowBound, std::min(number, highBound));
 }
