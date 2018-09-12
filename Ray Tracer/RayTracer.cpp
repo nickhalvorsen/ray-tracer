@@ -12,12 +12,13 @@
 #include <memory>
 
 using std::vector;
+using std::shared_ptr;
 using std::swap;
 using std::max;
 
 const Color RayTracer::_backgroundColor = Color(160, 210, 250);
 
-RayTracer::RayTracer(int antiAliasingFactor, int maxDepth, vector<SceneObject*> sceneObjects, vector<LightSource> lightSources)
+RayTracer::RayTracer(int antiAliasingFactor, int maxDepth, vector<shared_ptr<SceneObject>> sceneObjects, vector<LightSource> lightSources)
 {
 	_antiAliasingFactor = antiAliasingFactor;
 	_maxDepth = maxDepth;
@@ -93,7 +94,7 @@ Color RayTracer::traceRay(Ray ray, int depth)
 {
 	Vector3D collisionPoint;
 
-	SceneObject* collidedObject = getClosestIntersection(ray, collisionPoint);
+	shared_ptr<SceneObject> collidedObject = getClosestIntersection(ray, collisionPoint);
 
 	if (collidedObject == nullptr)
 	{
@@ -127,10 +128,10 @@ Color RayTracer::traceRay(Ray ray, int depth)
 	return colorAtThisPoint;
 }
 
-SceneObject* RayTracer::getClosestIntersection(Ray ray, Vector3D& intersectionPoint)
+shared_ptr<SceneObject> RayTracer::getClosestIntersection(Ray ray, Vector3D& intersectionPoint)
 {
 	double closestIntersection = 1000000000;
-	SceneObject* intersectedObject = nullptr;
+	shared_ptr<SceneObject> intersectedObject = nullptr;
 
 	for (auto &sceneObject : _sceneObjects)
 	{
@@ -149,7 +150,7 @@ SceneObject* RayTracer::getClosestIntersection(Ray ray, Vector3D& intersectionPo
 	return intersectedObject;
 }
 
-Color RayTracer::getColorWithLight(SceneObject* object, const Vector3D& pointOnObject)
+Color RayTracer::getColorWithLight(shared_ptr<SceneObject> object, const Vector3D& pointOnObject)
 {
 	Color colorAtPoint(0, 0, 0);
 
@@ -162,13 +163,13 @@ Color RayTracer::getColorWithLight(SceneObject* object, const Vector3D& pointOnO
 	return colorAtPoint;
 }
 
-Color RayTracer::getAmbientLight(SceneObject* object)
+Color RayTracer::getAmbientLight(shared_ptr<SceneObject> object)
 {
 	return object->color;
 }
 
 // Diffuse lighting (aka "lambertian")
-Color RayTracer::getAllDiffuseLight(SceneObject* object, const Vector3D& pointOnObject)
+Color RayTracer::getAllDiffuseLight(shared_ptr<SceneObject> object, const Vector3D& pointOnObject)
 {
 	Color colorAtPoint(0, 0, 0);
 
@@ -180,7 +181,7 @@ Color RayTracer::getAllDiffuseLight(SceneObject* object, const Vector3D& pointOn
 	return colorAtPoint;
 }
 
-Color RayTracer::getDiffuseLight(SceneObject* object, const Vector3D& pointOnObject, const LightSource& lightSource)
+Color RayTracer::getDiffuseLight(shared_ptr<SceneObject> object, const Vector3D& pointOnObject, const LightSource& lightSource)
 {
 	Vector3D normal = object->getNormal(pointOnObject);
 	Vector3D pointToLight = (_lightSources[0].point - pointOnObject).normalized();
@@ -202,7 +203,7 @@ Color RayTracer::getDiffuseLight(SceneObject* object, const Vector3D& pointOnObj
 	return Color(r, g, b);
 }
 
-bool RayTracer::anyOtherObjectsIntersectSegment(Segment3D segment, SceneObject* objectToExclude)
+bool RayTracer::anyOtherObjectsIntersectSegment(Segment3D segment, shared_ptr<SceneObject> objectToExclude)
 {
 	for (auto & sceneObject : _sceneObjects)
 	{
@@ -220,7 +221,7 @@ bool RayTracer::anyOtherObjectsIntersectSegment(Segment3D segment, SceneObject* 
 	return false;
 }
 
-Color RayTracer::getReflectedColor(Ray ray, SceneObject* collidedObject, const Vector3D& collisionPoint, int depth, double& reflectedLightRatio)
+Color RayTracer::getReflectedColor(Ray ray, shared_ptr<SceneObject> collidedObject, const Vector3D& collisionPoint, int depth, double& reflectedLightRatio)
 {
 	Ray reflected = getReflectedRay(ray, collidedObject, collisionPoint);
 	Color reflectedColor = traceRay(reflected, depth + 1);
@@ -233,7 +234,7 @@ Color RayTracer::getReflectedColor(Ray ray, SceneObject* collidedObject, const V
 	return reflectedColor;
 }
 
-Ray RayTracer::getReflectedRay(Ray ray, SceneObject* object, Vector3D objectCollisionPoint)
+Ray RayTracer::getReflectedRay(Ray ray, shared_ptr<SceneObject> object, Vector3D objectCollisionPoint)
 {
 	Vector3D direction = ray.getDirection().normalized();
 	Vector3D normal = object->getNormal(objectCollisionPoint);
