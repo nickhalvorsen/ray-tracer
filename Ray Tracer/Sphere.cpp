@@ -5,7 +5,7 @@
 
 using std::max;
 
-Sphere::Sphere(int id, Vector3D center, double radius, Color color, float reflectionIndex)
+Sphere::Sphere(int id, Vector3D center, double radius, Color color, double reflectionIndex)
 {
 	this->id = id;
 	this->_center = center;
@@ -33,7 +33,7 @@ bool Sphere::getClosestIntersection(Ray ray, Vector3D& intersectionPoint, double
 		return false;
 	}
 
-	float discr = b * b - c;
+	double discr = b * b - c;
 
 	// A negative discriminant corresponds to ray missing sphere
 	if (discr < 0.0)

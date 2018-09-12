@@ -28,8 +28,8 @@ private:
 	Color getAllDiffuseLight(SceneObject* object, const Vector3D& pointOnObject);
 	Color getDiffuseLight(SceneObject* object, const Vector3D& pointOnObject, const LightSource& lightSource);
 	bool anyOtherObjectsIntersectSegment(Segment3D segment, SceneObject* objectToExclude);
-	Color getReflectedColor(Ray ray, SceneObject* collidedObject, const Vector3D& collisionPoint, int depth, float& reflectedLightRatio);
+	Color getReflectedColor(Ray ray, SceneObject* collidedObject, const Vector3D& collisionPoint, int depth, double& reflectedLightRatio);
 	Ray getReflectedRay(Ray ray, SceneObject* object, Vector3D objectCollisionPoint);
-	float calculateReflectedLight(const Vector3D& lightDirection, const Vector3D& normalDirection, const float objectReflectionIndex);
+	double calculateReflectedLight(const Vector3D& lightDirection, const Vector3D& normalDirection, const double objectReflectionIndex);
 	Color averageColor(const std::vector<Color>& samples);
 };

@@ -8,12 +8,12 @@ int SceneObject::getId()
 	return id;
 }
 
-void SceneObject::setReflectionIndex(float reflectionIndex)
+void SceneObject::setReflectionIndex(double reflectionIndex)
 {
-	_reflectionIndex = MathUtility::clamp(reflectionIndex, 0.0f, 1.0f);
+	_reflectionIndex = MathUtility::clampDouble(reflectionIndex, 0.0f, 1.0f);
 }
 
-float SceneObject::getReflectionIndex()
+double SceneObject::getReflectionIndex()
 {
 	return _reflectionIndex;
 }

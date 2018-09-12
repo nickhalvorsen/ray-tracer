@@ -2,7 +2,7 @@
 #include "Quad.h"
 
 
-Quad::Quad(int id, Vector3D point1, Vector3D point2, Vector3D point3, Vector3D point4, Color color, float reflectionIndex)
+Quad::Quad(int id, Vector3D point1, Vector3D point2, Vector3D point3, Vector3D point4, Color color, double reflectionIndex)
 {
 	this->id = id;
 	this->color = color;

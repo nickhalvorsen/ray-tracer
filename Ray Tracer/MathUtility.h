@@ -2,5 +2,6 @@
 
 namespace MathUtility
 {
-	float clamp(float number, float lowBound, float highBound);
+	int clampInt(int number, int lowBound, int highBound);
+	double clampDouble(double number, double lowBound, double highBound);
 }

@@ -69,9 +69,9 @@ Color RayTracer::averageColor(const vector<Color>& samples)
 	}
 
 	// We can assume that there is at least 1 sample per pixel. 
-	float averageR = totalR / samples.size();
-	float averageG = totalG / samples.size();
-	float averageB = totalB / samples.size();
+	int averageR = totalR / samples.size();
+	int averageG = totalG / samples.size();
+	int averageB = totalB / samples.size();
 
 	return Color(averageR, averageG, averageB);
 }
@@ -109,7 +109,7 @@ Color RayTracer::traceRay(Ray ray, int depth)
 
 	if (collidedObject->getReflectionIndex() > 0)
 	{
-		float reflectedLightRatio;
+		double reflectedLightRatio;
 		Color reflectedColor = getReflectedColor(ray, collidedObject, collisionPoint, depth, reflectedLightRatio);
 
 		Color objectColorPortion = (colorAtThisPoint * (1 - reflectedLightRatio));
@@ -195,11 +195,11 @@ Color RayTracer::getDiffuseLight(SceneObject* object, const Vector3D& pointOnObj
 	double val = max(normal.dot(pointToLight), 0.0);
 	// In the future the light intensity could be based on distance from the light source.
 
-	int r = object->color.r * val * (lightSource.intensity.r / 255.0);
-	int g = object->color.g * val * (lightSource.intensity.g / 255.0);
-	int b = object->color.b * val * (lightSource.intensity.b / 255.0);
+	int r = (int)(object->color.r * val * (lightSource.intensity.r / 255.0));
+	int g = (int)(object->color.g * val * (lightSource.intensity.g / 255.0));
+	int b = (int)(object->color.b * val * (lightSource.intensity.b / 255.0));
 
-	Color(r, g, b);
+	return Color(r, g, b);
 }
 
 bool RayTracer::anyOtherObjectsIntersectSegment(Segment3D segment, SceneObject* objectToExclude)
@@ -220,7 +220,7 @@ bool RayTracer::anyOtherObjectsIntersectSegment(Segment3D segment, SceneObject* 
 	return false;
 }
 
-Color RayTracer::getReflectedColor(Ray ray, SceneObject* collidedObject, const Vector3D& collisionPoint, int depth, float& reflectedLightRatio)
+Color RayTracer::getReflectedColor(Ray ray, SceneObject* collidedObject, const Vector3D& collisionPoint, int depth, double& reflectedLightRatio)
 {
 	Ray reflected = getReflectedRay(ray, collidedObject, collisionPoint);
 	Color reflectedColor = traceRay(reflected, depth + 1);
@@ -243,10 +243,11 @@ Ray RayTracer::getReflectedRay(Ray ray, SceneObject* object, Vector3D objectColl
 }
 
 // aka "fresnel equation"
-float RayTracer::calculateReflectedLight(const Vector3D& lightDirection, const Vector3D& normalDirection, const float objectReflectionIndex)
+double RayTracer::calculateReflectedLight(const Vector3D& lightDirection, const Vector3D& normalDirection, const double objectReflectionIndex)
 {
-	float cosi = MathUtility::clamp(-1, 1, lightDirection.dot(normalDirection));
-	float etai = 1, etat = objectReflectionIndex;
+	float cosi = (float)MathUtility::clampDouble(-1, 1, lightDirection.dot(normalDirection));
+	float etai = 1;
+	float etat = (float)objectReflectionIndex;
 	if (cosi > 0) { swap(etai, etat); }
 	// Compute sini using Snell's law
 	float sint = etai / etat * sqrtf(max(0.f, 1 - cosi * cosi));
@@ -255,10 +256,10 @@ float RayTracer::calculateReflectedLight(const Vector3D& lightDirection, const V
 		return 1;
 	}
 	else {
-		float cost = sqrtf(max(0.f, 1 - sint * sint));
+		double cost = sqrtf(max(0.f, 1 - sint * sint));
 		cosi = fabsf(cosi);
-		float Rs = ((etat * cosi) - (etai * cost)) / ((etat * cosi) + (etai * cost));
-		float Rp = ((etai * cosi) - (etat * cost)) / ((etai * cosi) + (etat * cost));
+		double Rs = ((etat * cosi) - (etai * cost)) / ((etat * cosi) + (etai * cost));
+		double Rp = ((etai * cosi) - (etat * cost)) / ((etai * cosi) + (etat * cost));
 		return (Rs * Rs + Rp * Rp) / 2;
 	}
 	// As a consequence of the conservation of energy, transmittance is given by:

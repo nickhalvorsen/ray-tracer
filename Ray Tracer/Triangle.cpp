@@ -4,7 +4,7 @@
 #include <algorithm>
 
 
-Triangle::Triangle(int id, Vector3D point1, Vector3D point2, Vector3D point3, Color color, float reflectionIndex)
+Triangle::Triangle(int id, Vector3D point1, Vector3D point2, Vector3D point3, Color color, double reflectionIndex)
 {
 	this->id = id;
 	this->_point1 = point1;
@@ -27,21 +27,21 @@ bool Triangle::getClosestIntersection(Ray ray, Vector3D& intersectionPoint, doub
 	Vector3D v0v2 = v2 - v0;
 	// no need to normalize
 	Vector3D N = v0v1.cross(v0v2); // N
-	float area2 = N.getLength();
+	double area2 = N.getLength();
 
 	// Step 1: finding P
 
 	// check if ray and plane are parallel ?
-	float NdotRayDirection = N.dot(ray.getDirection());
-	float kEpsilon = 0.00001;
+	double NdotRayDirection = N.dot(ray.getDirection());
+	double kEpsilon = 0.00001;
 	if (fabs(NdotRayDirection) < kEpsilon) // almost 0
 		return false; // they are parallel so they don't intersect !
 
 		// compute d parameter using equation 2
-	float d = N.dot(v0);
+	double d = N.dot(v0);
 
 	// compute t (equation 3)
-	float t = (N.dot(ray.origin) + d) / NdotRayDirection;
+	double t = (N.dot(ray.origin) + d) / NdotRayDirection;
 	// check if the triangle is in behind the ray
 	if (t < 0) return false; // the triangle is behind
 

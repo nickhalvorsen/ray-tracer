@@ -7,7 +7,12 @@
 
 using std::max;
 
-float MathUtility::clamp(float number, float lowBound, float highBound)
+int MathUtility::clampInt(int number, int lowBound, int highBound)
+{
+	return max(lowBound, std::min(number, highBound));
+}
+
+double MathUtility::clampDouble(double number, double lowBound, double highBound)
 {
 	return max(lowBound, std::min(number, highBound));
 }

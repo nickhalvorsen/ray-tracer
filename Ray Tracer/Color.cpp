@@ -31,7 +31,10 @@ bool Color::operator==(Color other)
 
 Color Color::operator*(double coefficient)
 {
-	return Color(r * coefficient, g * coefficient, b * coefficient);
+	int newR = (int)(r * coefficient);
+	int newG = (int)(g * coefficient);
+	int newB = (int)(b * coefficient);
+	return Color(newR, newG, newB);
 }
 
 Color Color::operator+(Color other)
@@ -49,5 +52,5 @@ Color Color::operator+=(Color other)
 
 int Color::validateRgb(int rgb)
 {
-	return MathUtility::clamp(rgb, 0, 255);
+	return MathUtility::clampInt(rgb, 0, 255);
 }
