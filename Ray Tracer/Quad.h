@@ -14,8 +14,8 @@ public:
 	// because the quad is made up of 2 triangles 
 	Quad(int id, Vector3D point1, Vector3D point2, Vector3D point3, Vector3D point4, Color color, float reflectionIndex);
 
-	bool getClosestIntersection(Ray ray, Vector3D& intersectionPoint, double& intersectionDistance);
-	Vector3D getNormal(Vector3D pointOnObject);
+	bool getClosestIntersection(Ray ray, Vector3D& intersectionPoint, double& intersectionDistance) override;
+	Vector3D getNormal(Vector3D pointOnObject) override;
 private:
 	Triangle _t1;
 	Triangle _t2;
