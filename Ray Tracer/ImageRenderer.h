@@ -1,7 +1,8 @@
 #pragma once
 
-#include "Bitmap.h"
-#include "RayTracer.h"
+#include <string>
+class RayTracer;
+class Bitmap;
 
 class ImageRenderer
 {
