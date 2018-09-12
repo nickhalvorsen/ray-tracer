@@ -61,11 +61,11 @@ Color RayTracer::averageColor(const vector<Color>& samples)
 	int totalG = 0;
 	int totalB = 0;
 
-	for (int i = 0; i < samples.size(); i++)
+	for (auto &sample : samples)
 	{
-		totalR += samples[i].r;
-		totalG += samples[i].g;
-		totalB += samples[i].b;
+		totalR += sample.r;
+		totalG += sample.g;
+		totalB += sample.b;
 	}
 
 	// We can assume that there is at least 1 sample per pixel. 
@@ -132,15 +132,15 @@ SceneObject* RayTracer::getClosestIntersection(Ray ray, Vector3D& intersectionPo
 	double closestIntersection = 1000000000;
 	SceneObject* intersectedObject = nullptr;
 
-	for (int i = 0; i < _sceneObjects.size(); i++)
+	for (auto &sceneObject : _sceneObjects)
 	{
 		Vector3D point;
 		double intersectionDistance;
-		bool intersected = _sceneObjects[i]->getClosestIntersection(ray, point, intersectionDistance);
+		bool intersected = sceneObject->getClosestIntersection(ray, point, intersectionDistance);
 
 		if (intersected && intersectionDistance < closestIntersection)
 		{ 
-			intersectedObject = _sceneObjects[i];
+			intersectedObject = sceneObject;
 			closestIntersection = intersectionDistance;
 			intersectionPoint = point;
 		}
@@ -172,9 +172,9 @@ Color RayTracer::getAllDiffuseLight(SceneObject* object, const Vector3D& pointOn
 {
 	Color colorAtPoint(0, 0, 0);
 
-	for (int i = 0; i < _lightSources.size(); i++)
+	for (auto &lightSource : _lightSources)
 	{
-		colorAtPoint += getDiffuseLight(object, pointOnObject, _lightSources[i]);
+		colorAtPoint += getDiffuseLight(object, pointOnObject, lightSource);
 	}
 
 	return colorAtPoint;
